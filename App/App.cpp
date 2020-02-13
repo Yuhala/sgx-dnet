@@ -20,7 +20,7 @@ static int stack_val = 10;
 
 /* Darknet variables */
 data training_data, test_data;
-network *net_out;
+//network *net_out;
 #define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet-romulus/App/dnet-out/cfg/cifar.cfg"
 //#define CIFAR_CFG_FILE "App/dnet-out/cfg/cifar.cfg"
 
@@ -57,25 +57,22 @@ void thread_func()
 
 /**
  * Train cifar network in the enclave:
- * We first create a network object in the untrusted side (net_out)
- * by parsing the config file (NB: we can't read/write files in the enclave)
- * This network is then passed to the enclave runtime via an ecall
- * and used as a template to create the secure network in the enclave
+ * We first parse the model config file in untrusted memory (NB: we can't read/write files in the enclave)
+ * The parsed values are then passed to the enclave runtime and use to create the secure network in enclave memory
  */
 void train_cifar(char *cfgfile, char *weightfile)
 {
     char *base = basecfg(cfgfile);
     printf("%s\n", base);
-    //I don't save weights on disk yet --> NULL weightfile
-    //For nvram weights, tests are done within the enclave
-    net_out = load_network(cfgfile, NULL, 0);
+    //I don't save weights on disk yet --> NULL weightfile   
+    
     list *sections = read_cfg(cfgfile);
 
     //Load training data
     training_data = load_all_cifar10();
     /**
      * The enclave will create a secure network struct in enclave memory
-     * and do a deep copy of net_out...
+     * using the parameters in the sections variable
      */
     ecall_trainer(global_eid, sections, &training_data, 0);
     printf("Training complete..\n");
