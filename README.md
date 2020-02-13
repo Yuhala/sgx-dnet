@@ -25,6 +25,8 @@
 - In case you have "strange" `seg faults`, your neural network may be too large to fit in the enclave heap.
 - Try increasing the enclave heap size i.e the `HeapMaxSize` parameter in the enclave config file. It is `2GB` (0x80000000) by default.
 
+## Note
+- All CUDA functionality is disabled/stripped off in `dnet-in` because GPUs do not have access to enclave memory.
 
 ![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
 
