@@ -12,6 +12,7 @@
 - Read and parse the model config file into a `list` data structure.
 - Read the training data into the global `training_data` object/variable.
 - Perform an ecall with the list and training data objects; the secure training routine is performed within the ecall.
+- Modify `Trainer.edl` or `Enclave.edl` accordingly if you need to add more e/ocalls.
 - See the example trainer with the cifar model for more inspiration on how to train and test other models.
 
 ## Testing the model
