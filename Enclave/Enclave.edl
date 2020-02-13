@@ -1,0 +1,28 @@
+
+
+/* Enclave.edl - Top EDL file. */
+
+
+
+enclave {
+    
+    include "dnet_types.h" /* network, data */
+
+    from "sgx_tstdc.edl" import *;
+    from "dnet-in/train/Trainer.edl" import *;
+    
+
+    trusted {
+
+       
+        public void empty_ecall();
+       
+        
+    };
+
+    untrusted {
+       
+           
+        void ocall_print_string([in, string] const char *str);
+    };
+};
