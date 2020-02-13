@@ -41,7 +41,8 @@ void train_cifar(list *sections, data *training_data, int pmem)
         printf("%ld, %.3f: %f, %f avg, %f rate,%ld images\n", get_current_batch(net), (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), *net->seen);
         if (*net->seen / N > epoch)
         {
-            epoch = *net->seen / N;
+            //epoch = *net->seen / N;
+            //printf("Epoch: %d\n", epoch);
             //char buff[256];
             //sprintf(buff, "%s/%s_%d.weights",backup_directory,base, epoch);
             //save_weights(net, buff);
