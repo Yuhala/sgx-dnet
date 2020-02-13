@@ -30,6 +30,7 @@ void train_cifar(list *sections, data *training_data, int pmem)
     int N = 50000;
     int epoch = (*net->seen) / N;
     data train = *training_data;
+    printf("Max batches: %d\n",net->max_batches);
 
     while (get_current_batch(net) < net->max_batches || net->max_batches == 0)
     {
@@ -49,6 +50,9 @@ void train_cifar(list *sections, data *training_data, int pmem)
         }
         if (get_current_batch(net) % 100 == 0)
         {
+            //run net on test data and note accuracy
+
+
             // char buff[256];
             // sprintf(buff, "%s/%s.backup",backup_directory,base);
             // save_weights(net, buff);
