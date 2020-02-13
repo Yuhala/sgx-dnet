@@ -21,7 +21,7 @@ static int stack_val = 10;
 /* Darknet variables */
 data training_data, test_data;
 //network *net_out;
-#define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet-romulus/App/dnet-out/cfg/cifar.cfg"
+#define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/cifar.cfg"
 //#define CIFAR_CFG_FILE "App/dnet-out/cfg/cifar.cfg"
 
 void ocall_print_string(const char *str)

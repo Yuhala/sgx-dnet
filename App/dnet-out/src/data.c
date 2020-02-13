@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define CIFAR_DATA_PATH "/home/ubuntu/peterson/sgx-dnet-romulus/App/dnet-out/data/cifar/cifar-10-batches-bin/data_batch_%d.bin"
+
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
