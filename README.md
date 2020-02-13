@@ -29,6 +29,7 @@
 
 ## Note
 - All CUDA functionality is disabled/stripped off in `dnet-in` because GPUs do not have access to enclave memory.
+- `dnet-in` contributes approximately `2MB` of enclave size after build.
 
 For questions or issues regarding `sgx-dnet` please contact me: `petersonyuhala@gmail.com`. 
 
