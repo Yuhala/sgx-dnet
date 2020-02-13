@@ -8,6 +8,9 @@
 #include "image.h"
 #include "tree.h"
 
+
+#define CIFAR_DATA_PATH "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/cifar/cifar-10-batches-bin/data_batch_%d.bin"
+
 static inline float distance_from_edge(int x, int max)
 {
     int dx = (max/2) - x;
