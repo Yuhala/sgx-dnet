@@ -20,6 +20,7 @@
 - To test the model after training, add a routine in `App.cpp` which takes the test data as input.
 - Add a test routine in the enclave/trusted section which performs inference on a trained `network` object.
 - Perform an ecall into the enclave runtime with the test data, and run your test routine within the enclave.
+- To test the example cifar trainer, download and copy the cifar training data into `App/dnet-out/data/cifar`, modify the cifar config file in `App/dnet-out/cfg/cifar.cfg` accordingly, build and run the project.
 
 ## Debug hints
 - The `sgx-gdb` debug tool is recommended for debugging your enclave application.
@@ -29,6 +30,8 @@
 ## Note
 - All CUDA functionality is disabled/stripped off in `dnet-in` because GPUs do not have access to enclave memory.
 
+For questions or issues regarding `sgx-dnet` please contact me: `petersonyuhala@gmail.com`. 
+
 ![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
 
 # Darknet #
@@ -36,4 +39,4 @@ Darknet is an open source neural network framework written in C and CUDA. It is 
 
 For more information see the [Darknet project website](http://pjreddie.com/darknet).
 
-For questions or issues please use the [Google Group](https://groups.google.com/forum/#!forum/darknet).
+
