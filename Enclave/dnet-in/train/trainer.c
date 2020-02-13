@@ -30,7 +30,7 @@ void train_cifar(list *sections, data *training_data, int pmem)
     int N = 50000;
     int epoch = (*net->seen) / N;
     data train = *training_data;
-    printf("Max batches: %d\n",net->max_batches);
+    printf("Max batches: %d\n", net->max_batches);
 
     while (get_current_batch(net) < net->max_batches || net->max_batches == 0)
     {
@@ -39,7 +39,8 @@ void train_cifar(list *sections, data *training_data, int pmem)
         if (avg_loss == -1)
             avg_loss = loss;
         avg_loss = avg_loss * .95 + loss * .05;
-        printf("%ld, %.3f: %f, %f avg, %f rate,%ld images\n", get_current_batch(net), (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), *net->seen);
+        printf("Batch num: %ld, Seen: %.3f: Loss: %f, Avg loss: %f avg, L. rate: %f rate,Images seen: %ld \n",
+               get_current_batch(net), (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), *net->seen);
         if (*net->seen / N > epoch)
         {
             //epoch = *net->seen / N;
@@ -51,7 +52,6 @@ void train_cifar(list *sections, data *training_data, int pmem)
         if (get_current_batch(net) % 100 == 0)
         {
             //run net on test data and note accuracy
-
 
             // char buff[256];
             // sprintf(buff, "%s/%s.backup",backup_directory,base);
