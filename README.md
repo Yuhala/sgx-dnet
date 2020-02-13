@@ -1,7 +1,7 @@
 ## Summary
 - `sgx-dnet` is a port of the machine learning library [Darknet](http://pjreddie.com/darknet) into Intel SGX. 
 - This library can be used to securely train and test neural networks models following the Darknet API. 
-- `sgx-dnet` is separated into two main parts: `dnet-in` and `dnet-out`. The former contains the necessary API to do secure training and inference within the enclave runtime, without any I/O functionality or system calls, and the latter is the full Darknet library which acts as a support library for the former and complements any unsupported enclave functionality.
+- `sgx-dnet` source is separated into two main parts: `dnet-in` (Enclave/dnet-in) and `dnet-out` (App/dnet-out). The former contains the necessary API to do secure training and inference within the enclave runtime, without any I/O functionality or system calls, and the latter is the full Darknet library which acts as a support library for the former and complements any unsupported enclave functionality.
 - Both parts communicate via ecalls and ocalls when/where necessary. 
 - Checkpointing weights to disk is TODO..
  
@@ -19,6 +19,11 @@
 - To test the model after training, add a routine in `App.cpp` which takes the test data as input.
 - Add a test routine in the enclave/trusted section which performs inference on a trained `network` object.
 - Perform an ecall into the enclave runtime with the test data, and run your test routine within the enclave.
+
+## Debug hints
+- The `sgx-gdb` debug tool is recommended for debugging your enclave application.
+- In case you have "strange" `seg faults`, your neural network may be too large to fit in the enclave heap.
+- Try increasing the enclave size i.e the `HeapMaxSize` parameter in the enclave config file. It is `2GB` (0x80000000) by default.
 
 
 ![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
