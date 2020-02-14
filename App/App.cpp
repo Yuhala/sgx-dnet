@@ -25,18 +25,6 @@ data training_data, test_data;
 
 
 
-/* Free section in untrusted memory*/
-void ocall_free_sec(section *sec)
-{
-    //printf("Freeing section in ocall..\n");
-    free_section(sec);
-}
-
-void ocall_free_list(list *list)
-{
-    free_list(list);
-}
-
 /* Thread function --> only for testing purposes */
 void thread_func()
 {
