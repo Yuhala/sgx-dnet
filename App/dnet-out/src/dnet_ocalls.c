@@ -34,7 +34,7 @@ void ocall_open_file(const char *filename)
 {
     if (!fp) //fp == NULL
     {
-        fp = fopen(filename, "wb");
+        fp = fopen(filename, "w+");
     }
 }
 
