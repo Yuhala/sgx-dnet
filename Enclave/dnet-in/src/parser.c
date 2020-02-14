@@ -1032,42 +1032,23 @@ network *create_net_in(list *sections)
     return net;
 }
 
-/* list *read_cfg(char *filename)
+
+void transpose_matrix(float *a, int rows, int cols)
 {
-    FILE *file = fopen(filename, "r");
-    if(file == 0) file_error(filename);
-    char *line;
-    int nu = 0;
-    list *options = make_list();
-    section *current = 0;
-    while((line=fgetl(file)) != 0){
-        ++ nu;
-        strip(line);
-        switch(line[0]){
-            case '[':
-                current = malloc(sizeof(section));
-                list_insert(options, current);
-                current->options = make_list();
-                current->type = line;
-                break;
-            case '\0':
-            case '#':
-            case ';':
-                free(line);
-                break;
-            default:
-                if(!read_option(line, current->options)){
-                    fprintf(stderr, "Config file error line %d, could parse: %s\n", nu, line);
-                    free(line);
-                }
-                break;
+    float *transpose = calloc(rows * cols, sizeof(float));
+    int x, y;
+    for (x = 0; x < rows; ++x)
+    {
+        for (y = 0; y < cols; ++y)
+        {
+            transpose[y * rows + x] = a[x * cols + y];
         }
     }
-    fclose(file);
-    return options;
-} */
+    memcpy(a, transpose, rows * cols * sizeof(float));
+    free(transpose);
+}
 
-/* void save_convolutional_weights_binary(layer l, FILE *fp)
+void save_convolutional_weights_binary(layer l, FILE *fp)
 {
 
     binarize_weights(l.weights, l.n, l.c*l.size*l.size, l.binary_weights);
@@ -1093,9 +1074,9 @@ network *create_net_in(list *sections)
             fwrite(&c, sizeof(char), 1, fp);
         }
     }
-} */
+}
 
-/* void save_convolutional_weights(layer l, FILE *fp)
+void save_convolutional_weights(layer l, FILE *fp)
 {
     if(l.binary){
         //save_convolutional_weights_binary(l, fp);
@@ -1111,8 +1092,8 @@ network *create_net_in(list *sections)
     }
     fwrite(l.weights, sizeof(float), num, fp);
 }
- */
-/* void save_batchnorm_weights(layer l, FILE *fp)
+
+void save_batchnorm_weights(layer l, FILE *fp)
 {
 
     fwrite(l.scales, sizeof(float), l.c, fp);
@@ -1131,8 +1112,8 @@ void save_connected_weights(layer l, FILE *fp)
         fwrite(l.rolling_variance, sizeof(float), l.outputs, fp);
     }
 }
- */
-/* void save_weights_upto(network *net, char *filename, int cutoff)
+
+void save_weights_upto(network *net, char *filename, int cutoff)
 {
 
     fprintf(stderr, "Saving weights to %s\n", filename);
@@ -1188,7 +1169,11 @@ void save_connected_weights(layer l, FILE *fp)
             save_convolutional_weights(*(l.self_layer), fp);
             save_convolutional_weights(*(l.output_layer), fp);
         } if(l.type == LOCAL){
-
+#ifdef GPU
+            if(gpu_index >= 0){
+                pull_local_layer(l);
+            }
+#endif
             int locations = l.out_w*l.out_h;
             int size = l.size*l.size*l.c*l.n*locations;
             fwrite(l.biases, sizeof(float), l.outputs, fp);
@@ -1196,28 +1181,14 @@ void save_connected_weights(layer l, FILE *fp)
         }
     }
     fclose(fp);
-} */
-/* void save_weights(network *net, char *filename)
+}
+void save_weights(network *net, char *filename)
 {
     save_weights_upto(net, filename, net->n);
 }
- */
-void transpose_matrix(float *a, int rows, int cols)
-{
-    float *transpose = calloc(rows * cols, sizeof(float));
-    int x, y;
-    for (x = 0; x < rows; ++x)
-    {
-        for (y = 0; y < cols; ++y)
-        {
-            transpose[y * rows + x] = a[x * cols + y];
-        }
-    }
-    memcpy(a, transpose, rows * cols * sizeof(float));
-    free(transpose);
-}
 
-/* void load_connected_weights(layer l, FILE *fp, int transpose)
+
+void load_connected_weights(layer l, FILE *fp, int transpose)
 {
     fread(l.biases, sizeof(float), l.outputs, fp);
     fread(l.weights, sizeof(float), l.outputs*l.inputs, fp);
@@ -1235,17 +1206,17 @@ void transpose_matrix(float *a, int rows, int cols)
         //printf("rolling_variance: %f mean %f variance\n", mean_array(l.rolling_variance, l.outputs), variance_array(l.rolling_variance, l.outputs));
     }
 
-} */
+}
 
-/* void load_batchnorm_weights(layer l, FILE *fp)
+void load_batchnorm_weights(layer l, FILE *fp)
 {
     fread(l.scales, sizeof(float), l.c, fp);
     fread(l.rolling_mean, sizeof(float), l.c, fp);
     fread(l.rolling_variance, sizeof(float), l.c, fp);
 
-} */
+}
 
-/* void load_convolutional_weights_binary(layer l, FILE *fp)
+void load_convolutional_weights_binary(layer l, FILE *fp)
 {
     fread(l.biases, sizeof(float), l.n, fp);
     if (l.batch_normalize && (!l.dontloadscales)){
@@ -1269,9 +1240,9 @@ void transpose_matrix(float *a, int rows, int cols)
         }
     }
 
-} */
+}
 
-/* void load_convolutional_weights(layer l, FILE *fp)
+void load_convolutional_weights(layer l, FILE *fp)
 {
     if(l.binary){
         //load_convolutional_weights_binary(l, fp);
@@ -1318,13 +1289,13 @@ void transpose_matrix(float *a, int rows, int cols)
     }
     //if (l.binary) binarize_weights(l.weights, l.n, l.c*l.size*l.size, l.weights);
 
-} */
+}
 
-/* void load_weights_upto(network *net, char *filename, int start, int cutoff)
+
+void load_weights_upto(network *net, char *filename, int start, int cutoff)
 {
 
-    fprintf(stderr, "Loading weights from %s...", filename);
-    fflush(stdout);
+    printf("Loading weights from weights file..\n");
     FILE *fp = fopen(filename, "rb");
     if(!fp) file_error(filename);
 
@@ -1406,5 +1377,3 @@ void load_weights(network *net, char *filename)
 {
     load_weights_upto(net, filename, 0, net->n);
 }
-
- */

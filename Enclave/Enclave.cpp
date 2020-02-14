@@ -1,6 +1,7 @@
-/**
- * Author: Peterson Yuhala
- * 
+/*
+ * Created on Fri Feb 14 2020
+ *
+ * Copyright (c) 2020 Peterson Yuhala, IIUN
  */
 
 #include "Enclave.h"

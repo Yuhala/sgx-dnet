@@ -6,6 +6,11 @@
 
 #include "dnet_ocalls.h"
 
+
+//File pointers used for reading/writing checkpoint-weight files
+FILE *read_fp = NULL;
+FILE *write_fp = NULL;
+
 void ocall_print_string(const char *str)
 {
     /* Proxy/Bridge will check the length and null-terminate

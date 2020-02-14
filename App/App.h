@@ -36,12 +36,9 @@
 extern "C"
 {
 #endif
-
-   /*  void ocall_free_sec(section *sec);
-    void ocall_free_list(list *list);
-    void ocall_print_string(const char *str);   
+    
     void train_cifar(char *cfgfile, char *weightfile);
-    void test_cifar(char *cfgfile, char *weightfile); */
+    void test_cifar(char *cfgfile, char *weightfile); 
 
 #if defined(__cplusplus)
 }

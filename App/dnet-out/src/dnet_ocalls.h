@@ -1,12 +1,21 @@
+/*
+ * Created on Fri Feb 14 2020
+ *
+ * Copyright (c) 2020 Peterson Yuhala, IIUN
+ */
+
 #ifndef DNET_OCALLS_H
 #define DNET_OCALLS_H
 
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdarg.h>
-#include "Enclave_u.h"
 #include "darknet.h"
+
+//edgerator header file
+#include "Enclave_u.h"
 
 #if defined(__cplusplus)
 
