@@ -12,9 +12,16 @@ void ecall_trainer(list *sections, data *training_data, int pmem)
     printf("Created and opened file.txt\n");
     char c[] = "enclave file i/o test";
     fwrite(c,strlen(c)+1,1,0);
-    ocall_close_file();
-    return;
+    char buffer[100];
+    ocall_close_file();//dont have fseek ocall so I close and reopen for now :-)
+    ocall_open_file("file.txt");
     
+     /* Read and display data */
+   fread(buffer, strlen(c)+1, 1, 0);
+   printf("%s\n", buffer);
+
+    return;
+
     train_cifar(sections, training_data, pmem);
 }
 
