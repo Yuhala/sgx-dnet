@@ -30,11 +30,12 @@ void ocall_free_list(list *list)
     free_list(list);
 }
 
+// 0 for read: 1 for write
 void ocall_open_file(const char *filename)
 {
     if (!fp) //fp == NULL
     {
-        fp = fopen(filename, "w+");
+        fp = fopen(filename, "r+");
     }
 }
 
