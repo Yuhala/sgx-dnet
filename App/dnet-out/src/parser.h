@@ -1,10 +1,11 @@
+/*
+ * Created on Fri Feb 14 2020
+ *
+ * Copyright (c) 2020 Peterson Yuhala, IIUN
+ */
 #ifndef PARSER_H
 #define PARSER_H
 #include "darknet.h"
-#include "network.h"
-
-void save_network(network net, char *filename);
-void save_weights_double(network net, char *filename);
-
 
 #endif
+

@@ -6,7 +6,6 @@
 
 #include <sgx_urts.h>
 #include "App.h"
-#include "Enclave_u.h"
 #include "ErrorSupport.h"
 
 
@@ -24,13 +23,6 @@ data training_data, test_data;
 #define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/cifar.cfg"
 //#define CIFAR_CFG_FILE "App/dnet-out/cfg/cifar.cfg"
 
-void ocall_print_string(const char *str)
-{
-    /* Proxy/Bridge will check the length and null-terminate
-     * the input string to prevent buffer overflow.
-     */
-    printf("%s", str);
-}
 
 
 /* Free section in untrusted memory*/
@@ -85,7 +77,7 @@ void test_cifar(char *cfgfile, char *weightfile)
 }
 
 /* Initialize the enclave:
- *   Call sgx_create_enclave to initialize an enclave instance
+ * Call sgx_create_enclave to initialize an enclave instance
  */
 int initialize_enclave(void)
 {

@@ -13,7 +13,8 @@
 #include "sgx_error.h" /* sgx_status_t */
 #include "sgx_eid.h"   /* sgx_enclave_id_t */
 
-#include "dnet-out/src/darknet.h"
+
+#include "dnet-out/src/dnet_ocalls.h"
 
 
 #ifndef TRUE
@@ -36,11 +37,11 @@ extern "C"
 {
 #endif
 
-    void ocall_free_sec(section *sec);
+   /*  void ocall_free_sec(section *sec);
     void ocall_free_list(list *list);
     void ocall_print_string(const char *str);   
     void train_cifar(char *cfgfile, char *weightfile);
-    void test_cifar(char *cfgfile, char *weightfile);
+    void test_cifar(char *cfgfile, char *weightfile); */
 
 #if defined(__cplusplus)
 }

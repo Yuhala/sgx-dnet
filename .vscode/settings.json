@@ -15,6 +15,9 @@
         "activation_layer.h": "c",
         "logistic_layer.h": "c",
         "utils.h": "c",
-        "data.h": "c"
+        "data.h": "c",
+        "cstdio": "cpp",
+        "fstream": "cpp",
+        "iostream": "cpp"
     }
 }
