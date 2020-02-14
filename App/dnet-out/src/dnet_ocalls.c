@@ -13,3 +13,17 @@ void ocall_print_string(const char *str)
      */
     printf("%s", str);
 }
+
+
+/* Free section in untrusted memory*/
+void ocall_free_sec(section *sec)
+{
+    //printf("Freeing section in ocall..\n");
+    free_section(sec);
+}
+
+void ocall_free_list(list *list)
+{
+    free_list(list);
+}
+

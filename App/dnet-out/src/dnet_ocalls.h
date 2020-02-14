@@ -14,14 +14,12 @@ extern "C"
 {
 #endif
 
-   
-    void ocall_print_string(const char *str);   
-   
+    void ocall_free_sec(section *sec);
+    void ocall_free_list(list *list);
+    void ocall_print_string(const char *str);
 
 #if defined(__cplusplus)
 }
 #endif
-
-
 
 #endif /* DNET_OCALLS_H */
