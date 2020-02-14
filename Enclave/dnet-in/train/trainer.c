@@ -16,6 +16,7 @@ void ecall_trainer(list *sections, data *training_data, int pmem)
     ocall_close_file(); */
     //dont have fseek ocall so I close and reopen for now :-)
     char buffer[100];
+     char c[] = "enclave file i/o test";
     ocall_open_file("file.txt");
 
     fread(buffer, strlen(c) + 1, 1, 0);
