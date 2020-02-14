@@ -3,7 +3,7 @@
 - This library can be used to securely train and test neural networks models following the Darknet API. 
 - `sgx-dnet` source is separated into two main parts: `dnet-in` (Enclave/dnet-in) and `dnet-out` (App/dnet-out). `dnet-in`contains all the necessary API to do secure training and inference within the enclave runtime, without any I/O functionality or system calls, and the `dnet-out` acts as a support library for the `dnet-in` and complements any unsupported enclave functionality.
 - Both parts communicate via ecalls and ocalls when/where necessary. 
-- We create wrappers for unsupported I/O calls like `fread, fwrite` etc. These wrappers perform ocalls which call the corresponding `libc` routines in the untrusted runtime. These wrappers are mainly used for checkpointing and reading weights to/from disk respectively.
+- We create wrappers for unsupported I/O calls like `fread, fwrite` etc. These wrappers perform ocalls which invoke the corresponding `libc` routines in the untrusted runtime. These wrappers are mainly used for checkpointing and reading weights to/from disk respectively.
 - For performance reasons, other I/O functionality like reading training data is performed completely outside; developers using `sgx-dnet` should design their code in such a way that (unsecure)input data is read into untrusted memory before proceeding into the enclave for training and inference. This style minimizes unecessary and expensive I/O during training or inference. For scenarios where training or inference data is to be kept private, the above mentioned wrapper functions could be exploited.
 - OPenCV functionality and video processing are not supported as of now. Future versions may take those into account.
 - Checkpointing weights to disk is TODO..
