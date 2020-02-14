@@ -7,6 +7,14 @@
 
 void ecall_trainer(list *sections, data *training_data, int pmem)
 {
+    
+    ocall_open_file("file.txt");
+    printf("Created and opened file.txt\n");
+    char c[] = "enclave file i/o test";
+    fwrite(c,strlen(c)+1,1,0);
+    ocall_close_file();
+    return;
+    
     train_cifar(sections, training_data, pmem);
 }
 

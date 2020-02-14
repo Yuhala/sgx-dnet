@@ -16,7 +16,7 @@ typedef struct size_params
     network *net;
 } size_params;
 
-//void save_network(network net, char *filename);
-//void save_weights_double(network net, char *filename);
+void save_network(network net, char *filename);
+void save_weights_double(network net, char *filename);
 
 #endif

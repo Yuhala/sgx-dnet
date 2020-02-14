@@ -3,18 +3,17 @@
  */
 
 
+/*
+ * Created on Fri Feb 14 2020
+ *
+ * Copyright (c) 2020 Peterson Yuhala, IIUN
+ */
 
 #ifndef DARKNET_API_IN
 #define DARKNET_API_IN
 
 #include "dnet_sgx_utils.h"
 #include "dnet_types.h"
-
-/**
- * Author: Peterson Yuhala
- * NB: all data I/O related routines here are not used (not supported in SGX enclaves)
- * even if the corresponding prototypes may be uncommented
- */
 
 #ifdef __cplusplus
 extern "C" {
@@ -93,10 +92,10 @@ int option_find_int(list *l, char *key, int def);
 int option_find_int_quiet(list *l, char *key, int def);
 
 //network *parse_network_cfg(char *filename);
-//void save_weights(network *net, char *filename);
-//void load_weights(network *net, char *filename);
-//void save_weights_upto(network *net, char *filename, int cutoff);
-//void load_weights_upto(network *net, char *filename, int start, int cutoff);
+void save_weights(network *net, char *filename);
+void load_weights(network *net, char *filename);
+void save_weights_upto(network *net, char *filename, int cutoff);
+void load_weights_upto(network *net, char *filename, int start, int cutoff);
 
 void zero_objectness(layer l);
 void get_region_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, float tree_thresh, int relative, detection *dets);

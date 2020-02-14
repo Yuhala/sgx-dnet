@@ -26,6 +26,10 @@ extern "C"
     void ocall_free_sec(section *sec);
     void ocall_free_list(list *list);
     void ocall_print_string(const char *str);
+    void ocall_open_file(const char *filename);
+    void ocall_close_file();
+    void ocall_fread(void *ptr, size_t size, size_t nmemb);
+    void ocall_fwrite(void *ptr, size_t size, size_t nmemb);
 
 #if defined(__cplusplus)
 }

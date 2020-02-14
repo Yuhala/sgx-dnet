@@ -47,7 +47,8 @@
 extern "C"
 {
 #endif
-
+    void fread(void *ptr, size_t size, size_t nmemb, int fp);
+    void fwrite(void *ptr, size_t size, size_t nmemb, int fp);
     void printf(const char *fmt, ...);
     //redefining srand and rand
     void srand(unsigned int seed);
