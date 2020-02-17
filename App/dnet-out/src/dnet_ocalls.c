@@ -44,10 +44,13 @@ void ocall_open_file(const char *filename, flag oflag)
         case O_WRONLY:
             fp = fopen(filename, "wb");
             printf("opened file in write only mode\n");
+            break;
         case O_RDPLUS:
             fp = fopen(filename, "r+");
+            break;
         case O_WRPLUS:
             fp = fopen(filename, "w+");
+            break;
         default:
             //nothing to do
         }
