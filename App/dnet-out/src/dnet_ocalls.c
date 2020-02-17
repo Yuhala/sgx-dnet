@@ -39,16 +39,17 @@ void ocall_open_file(const char *filename, flag oflag)
         {
         case O_RDONLY:
             fp = fopen(filename, "rb");
+            printf("opened file in read only mode\n");
             break;
         case O_WRONLY:
             fp = fopen(filename, "wb");
+            printf("opened file in write only mode\n");
         case O_RDPLUS:
             fp = fopen(filename, "r+");
         case O_WRPLUS:
             fp = fopen(filename, "w+");
         default:
-            printf("wrong open flag..\n");
-            break;
+            //nothing to do
         }
     }
     else
