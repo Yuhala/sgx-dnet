@@ -134,7 +134,8 @@ void test_cifar(list *sections, data *test_data, int pmem)
 void classify_tiny(list *sections, image *img, int top)
 {
 
-    network *net = create_net_in(sections);
+    network *net = load_network(sections, TINY_WEIGHTS, 0);
+    printf("done loading tiny model in the enclave..\n");
     set_batch_network(net, 1);
     srand(2222222);
     char **names = {"airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"};
@@ -159,7 +160,6 @@ void classify_tiny(list *sections, image *img, int top)
     if (r.data != im.data)
         free_image(r);
 }
-
 
 /**
  * Author: Peterson Yuhala
