@@ -5,23 +5,26 @@
 #include "darknet.h"
 #include "trainer.h"
 
-void ecall_trainer(list *sections, data *training_data, int pmem)
+void test_fio()
 {
-     
-    ocall_open_file("file.txt",O_WRONLY);
-    printf("Created and opened file.txt\n");
+    ocall_open_file("file.txt", O_WRONLY);
     char c[] = "enclave file i/o test";
-    fwrite(c,strlen(c)+1,1,0);   
+    fwrite(c, strlen(c) + 1, 1, 0);
     ocall_close_file();
     //dont have fseek ocall so I close and reopen for now :-)
     char buffer[100];
-     
-    ocall_open_file("file.txt",O_RDONLY);
+
+    ocall_open_file("file.txt", O_RDONLY);
 
     fread(buffer, strlen(c) + 1, 1, 0);
     printf("String: %s\n", buffer);
     ocall_close_file();
+}
 
+void ecall_trainer(list *sections, data *training_data, int pmem)
+{
+
+    test_fio();
     return;
 
     train_cifar(sections, training_data, pmem);
