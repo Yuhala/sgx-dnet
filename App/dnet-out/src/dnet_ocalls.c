@@ -6,9 +6,9 @@
 
 #include "dnet_ocalls.h"
 
-//File pointer used for reading/writing checkpoint-weight files
+//File pointer used for reading/writing files from within the enclave runtime
 FILE *fp = NULL;
-char *weights_file = "/path/to/weightsfile";
+
 
 void ocall_print_string(const char *str)
 {
@@ -39,11 +39,11 @@ void ocall_open_file(const char *filename, flag oflag)
         {
         case O_RDONLY:
             fp = fopen(filename, "rb");
-            printf("opened file in read only mode\n");
+            printf("Opened file in read only mode\n");
             break;
         case O_WRONLY:
             fp = fopen(filename, "wb");
-            printf("opened file in write only mode\n");
+            printf("Opened file in write only mode\n");
             break;
         case O_RDPLUS:
             fp = fopen(filename, "r+");
@@ -57,7 +57,7 @@ void ocall_open_file(const char *filename, flag oflag)
     }
     else
     {
-        printf("problem with file pointer..\n");
+        printf("Problem with file pointer..\n");
     }
 }
 

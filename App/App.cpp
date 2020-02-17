@@ -84,17 +84,11 @@ void test_tiny(char *cfgfile)
 {
     //read network config file
     list *sections = read_cfg(cfgfile);
-    //read labels
-    //-----------------------------------------------------------
+    //read labels    
     list *options = read_data_cfg(DATA_CFG);
-
-    char *name_list = option_find_str(options, "names", 0);
-    /*  if (!name_list)
-        name_list = option_find_str(options, "labels", "data/labels.list"); */
-    int top = option_find_int(options, "top", 1);
+    char *name_list = option_find_str(options, "names", 0);   
     list *plist = get_paths(name_list);
-
-    //----------------------------------------------------------
+   
     //read image file
     char *file = TINY_IMAGE;
     char buff[256];
@@ -104,6 +98,7 @@ void test_tiny(char *cfgfile)
 
     //classify image in enclave
     ecall_classify(global_eid, sections, plist, &im);
+    //free data
     free_image(im);
     printf("Classification complete..\n");
 }

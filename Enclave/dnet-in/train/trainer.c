@@ -99,7 +99,7 @@ void ecall_tester(list *sections, data *test_data, int pmem)
     printf("ecall_tester..\n");
 }
 
-void ecall_classify(list *sections,list* labels, image *im)
+void ecall_classify(list *sections, list *labels, image *im)
 {
     classify_tiny(sections, labels, im, 5);
 }
@@ -130,17 +130,19 @@ void test_cifar(list *sections, data *test_data, int pmem)
 
 /**
  * Classify an image with Tiny Darknet 
+ * Num of classes in model: 1000
  */
-void classify_tiny(list *sections,list* labels, image *img, int top)
+void classify_tiny(list *sections, list *labels, image *img, int top)
 {
 
     network *net = load_network(sections, TINY_WEIGHTS, 0);
     printf("Done loading trained network model in enclave..\n");
     set_batch_network(net, 1);
     srand(2222222);
-    //get label names
+
+    //get label names; e.g dog, person, giraffe etc
     char **names = (char **)list_to_array(labels);
-    //char **names = {"airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"};
+
     int *indexes = calloc(top, sizeof(int));
     image im = *img;
     image r = letterbox_image(im, net->w, net->h);
@@ -148,7 +150,7 @@ void classify_tiny(list *sections,list* labels, image *img, int top)
     float *X = r.data;
 
     float *predictions = network_predict(net, X);
-    printf("net outputs: %d\n",net->outputs);
+
     if (net->hierarchy)
         hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
     top_k(predictions, net->outputs, top, indexes);
@@ -157,11 +159,9 @@ void classify_tiny(list *sections,list* labels, image *img, int top)
     for (int i = 0; i < top; ++i)
     {
         int index = indexes[i];
-        //if(net->hierarchy) printf("%d, %s: %f, parent: %s \n",index, names[index], predictions[index], (net->hierarchy->parent[index] >= 0) ? names[net->hierarchy->parent[index]] : "Root");
-        //else printf("%s: %f\n",names[index], predictions[index]);
-        printf("%5.2f%%: %s \n", predictions[index] * 100,names[index]);
-        //printf("label index: %d\n",index);
+        printf("%5.2f%%: %s \n", predictions[index] * 100, names[index]);
     }
+
     if (r.data != im.data)
         free_image(r);
 }
