@@ -25,6 +25,13 @@
 - Perform an ecall into the enclave runtime with the test data, and run your test routine within the enclave.
 - To test the example cifar trainer, download and copy the cifar training data into `App/dnet-out/data/cifar`, modify the cifar config file in `App/dnet-out/cfg/cifar.cfg` accordingly, build and run the project.
 
+## Doing inference
+- By providing a weight file with the corresponding labels, you can perform inference on a pre-trained network model.
+- The example tiny darknet application shows how to classify images using a pre-trained network.
+- The trained model weights can be obtained via: `wget https://pjreddie.com/media/files/tiny.weights`. Copy these weights to the `Apps/dnet-out/backup` folder and modify the corresponding path to the weights file in [trainer.c](Enclave/dnet-in/train/trainer.c). Equally modify the paths to the corresponding config files and test image in [App.cpp](App/App.cpp).
+- Run the `test_tiny` routine in the main function.
+- Sample top5 prediction on the `giraffe` image: ![giraffe predictions](App/dnet-out/data/giraffe.jpg)
+
 ## Debug hints
 - The `sgx-gdb` debug tool is recommended for debugging your enclave application.
 - In case you have "strange" `seg faults`, your neural network may be too large to fit in the enclave heap.
