@@ -29,7 +29,8 @@
 - The tiny darknet classification example shows how to classify images using a pre-trained network.
 - The trained model weights can be obtained via: `wget https://pjreddie.com/media/files/tiny.weights`. Copy these weights to the `Apps/dnet-out/backup` folder and modify the corresponding path to the weights file in [trainer.c](Enclave/dnet-in/train/trainer.c). Equally modify the paths to the corresponding config file and test image in [App.cpp](App/App.cpp).
 - Run the `test_tiny` routine in the main function.
-- Sample top5 prediction on the `eagle` image: ![eagle predictions](App/dnet-out/data/test_predict.png)
+- Sample top5 prediction on the `eagle` image: 
+![eagle predictions](App/dnet-out/data/test_predict.png)
 
 ## Debug hints
 - The `sgx-gdb` debug tool is recommended for debugging your enclave application.
