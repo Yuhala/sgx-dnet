@@ -17,12 +17,13 @@ static int stack_val = 10;
 
 /* Darknet variables */
 data training_data, test_data;
-//network *net_out;
+
 
 #define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/cifar.cfg"
 #define CIFAR_TEST_DATA "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/cifar/cifar-10-batches-bin/test_batch.bin"
-#define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/dog.jpg"
+#define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/giraffe.jpg"
 #define TINY_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/tiny.cfg"
+#define DATA_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/"
 
 /* Thread function --> only for testing purposes */
 void thread_func()
@@ -84,6 +85,20 @@ void test_tiny(char *cfgfile)
 {
     //read network config file
     list *sections = read_cfg(cfgfile);
+    //read labels
+    //-----------------------------------------------------------
+   /*  list *options = read_data_cfg(datacfg);
+
+    char *name_list = option_find_str(options, "names", 0);
+    if (!name_list)
+        name_list = option_find_str(options, "labels", "data/labels.list");
+    if (top == 0)
+        top = option_find_int(options, "top", 1);
+
+    int i = 0;
+    char **names = get_labels(name_list);
+ */
+    //----------------------------------------------------------
     //read image file
     char *file = TINY_IMAGE;
     char buff[256];
@@ -96,6 +111,8 @@ void test_tiny(char *cfgfile)
     free_image(im);
     printf("Classification complete..\n");
 }
+
+
 
 /* Initialize the enclave:
  * Call sgx_create_enclave to initialize an enclave instance
