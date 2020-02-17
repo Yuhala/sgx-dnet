@@ -556,7 +556,7 @@ typedef struct
 /**
  * Author: Pyuhala 
  * Added these for file I/O ocalls * 
- * These are the common flags used in this darknet
+ * These are the common flags used in darknet
  * Other flags can be added
  */
 

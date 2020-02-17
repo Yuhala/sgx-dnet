@@ -8,7 +8,6 @@
 #include "App.h"
 #include "ErrorSupport.h"
 
-
 /* For romulus */
 #define MAX_PATH FILENAME_MAX
 
@@ -16,14 +15,12 @@
 sgx_enclave_id_t global_eid = 0;
 static int stack_val = 10;
 
-
 /* Darknet variables */
 data training_data, test_data;
 //network *net_out;
+
 #define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/cifar.cfg"
-//#define CIFAR_CFG_FILE "App/dnet-out/cfg/cifar.cfg"
-
-
+#define CIFAR_TEST_DATA "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/cifar/cifar-10-batches-bin/test_batch.bin"
 
 /* Thread function --> only for testing purposes */
 void thread_func()
@@ -37,15 +34,15 @@ void thread_func()
 
 /**
  * Train cifar network in the enclave:
- * We first parse the model config file in untrusted memory (NB: we can't read/write files in the enclave)
+ * We first parse the model config file in untrusted memory; we can read it in the enclave via ocalls but its expensive
+ * so we prefare to do it here as it has no obvious issues in terms of security
  * The parsed values are then passed to the enclave runtime and use to create the secure network in enclave memory
  */
-void train_cifar(char *cfgfile, char *weightfile)
+void train_cifar(char *cfgfile)
 {
-    char *base = basecfg(cfgfile);
-    printf("%s\n", base);
-    //I don't save weights on disk yet --> NULL weightfile   
-    
+
+    //I don't save weights on disk yet --> NULL weightfile
+
     list *sections = read_cfg(cfgfile);
 
     //Load training data
@@ -59,9 +56,41 @@ void train_cifar(char *cfgfile, char *weightfile)
     free_data(training_data);
 }
 
-void test_cifar(char *cfgfile, char *weightfile)
+/**
+ * Test a trained cifar model
+ * Define path to weighfile in trainer.c
+ */
+void test_cifar(char *cfgfile)
 {
-    //TODO
+
+    list *sections = read_cfg(cfgfile);
+
+    //Load test data
+    test_data = load_cifar10_data(CIFAR_TEST_DATA);
+    /**
+     * The enclave will create a secure network struct in enclave memory
+     * using the parameters in the sections variable
+     */
+    ecall_tester(global_eid, sections, &test_data, 0);
+    printf("Testing complete..\n");
+    free_data(test_data);
+}
+
+/**
+ * Test a trained tiny darknet model
+ * Define path to weighfile in trainer.c
+ */
+void test_tiny(char *cfgfile)
+{
+
+    list *sections = read_cfg(cfgfile);
+
+    /**
+     * The enclave will create a secure network struct in enclave memory
+     * using the parameters in the sections variable
+     */
+    ecall_tester(global_eid, sections, NULL, 0);
+    printf("Testing complete..\n");
 }
 
 /* Initialize the enclave:
@@ -101,9 +130,9 @@ int SGX_CDECL main(int argc, char *argv[])
 
     //Create NUM_THRREADS threads
     //std::thread trd[NUM_THREADS];
-    
-    
-    train_cifar(CIFAR_CFG_FILE, NULL);
+
+    //train_cifar(CIFAR_CFG_FILE);
+    test_cifar(CIFAR_CFG_FILE);
     /*  
     for (int i = 0; i < NUM_THREADS; i++)
     {

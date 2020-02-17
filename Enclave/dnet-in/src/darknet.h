@@ -28,8 +28,9 @@ void free_layer(layer);
 //create enclave net with parsed sections
 network *create_net_in(list* sections);
 
+//modify this api
+network *load_network(list *sections, char *weights, int clear);
 
-network *load_network(char *cfg, char *weights, int clear);
 load_args get_base_args(network *net);
 
 void free_data(data d);

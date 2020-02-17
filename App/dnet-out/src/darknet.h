@@ -25,7 +25,7 @@ metadata get_metadata(char *file);
 tree *read_tree(char *filename);
 void free_layer(layer);
 
-network *load_network(char *cfg, char *weights, int clear);
+//network *load_network(char *cfg, char *weights, int clear);
 load_args get_base_args(network *net);
 
 void free_data(data d);

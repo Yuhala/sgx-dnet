@@ -49,16 +49,15 @@ load_args get_base_args(network *net)
 
 
 
-/* 
-network *load_network(char *cfg, char *weights, int clear)
+network *load_network(list *sections, char *weights, int clear)
 {
-    network *net = parse_network_cfg(cfg);
+    network *net = create_net_in(sections);
     if(weights && weights[0] != 0){
         load_weights(net, weights);
     }
     if(clear) (*net->seen) = 0;
     return net;
-} */
+} 
 
 size_t get_current_batch(network *net)
 {

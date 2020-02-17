@@ -5,6 +5,10 @@
 #include "darknet.h"
 #include "trainer.h"
 
+#define CIFAR_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup"
+#define TINY_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup"
+#define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/dog.jpg"
+
 void test_fio()
 {
     ocall_open_file("file.txt", O_WRONLY);
@@ -90,26 +94,44 @@ void train_cifar(list *sections, data *training_data, int pmem)
 
     //free_data(train);
 }
-void ecall_tester(network *net, data *test_data, int pmem)
+void ecall_tester(list *sections, data *test_data, int pmem)
 {
     //do pointer checks
     printf("ecall_tester..\n");
+}
 
-    /*  network *net = load_network(filename, weightfile, 0);
-    //srand(time(0));
+void test_cifar(list *sections, data *test_data, int pmem)
+{
 
-    //clock_t time;
+    if (pmem)
+    {
+        //test on pmem model
+        return;
+    }
+
+    //char* weightfile = CIFAR_WEIGHTS;
+    network *net = load_network(sections, CIFAR_WEIGHTS, 0);
+    srand(12345);
+
     float avg_acc = 0;
     float avg_top5 = 0;
-    data test = load_cifar10_data("data/cifar/test_batch.bin");
-
-    //time=clock();
+    data test = *test_data;
 
     float *acc = network_accuracies(net, test, 2);
     avg_acc += acc[0];
     avg_top5 += acc[1];
     printf("top1: %f, xx seconds, %d images\n", avg_acc, test.X.rows);
-    free_data(test); */
+    //free_data(test);
+}
+
+/**
+ * Classify an image with Tiny Darknet 
+ */
+void classify_tiny(list *sections)
+{
+    //image to be classified
+    char *image_path = "";
+    network *net = create_net_in(sections);
 }
 
 /**

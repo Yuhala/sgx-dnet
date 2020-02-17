@@ -37,8 +37,9 @@ extern "C"
 {
 #endif
     
-    void train_cifar(char *cfgfile, char *weightfile);
-    void test_cifar(char *cfgfile, char *weightfile); 
+    void train_cifar(char *cfgfile);
+    void test_cifar(char *cfgfile); 
+    void test_tiny(char *cfgfile);
 
 #if defined(__cplusplus)
 }
