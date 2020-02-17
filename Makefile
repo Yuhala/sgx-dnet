@@ -1,6 +1,6 @@
 #
 # Author: Peterson Yuhala
-# Copyright (C) 2011-2019 Intel Corporation. All rights reserved. 
+# Copyright (C) 2020 IIUN. All rights reserved. 
 #
 
 ######## SGX SDK Settings ########

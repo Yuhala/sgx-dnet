@@ -135,7 +135,7 @@ void classify_tiny(list *sections, image *img, int top)
 {
 
     network *net = load_network(sections, TINY_WEIGHTS, 0);
-    printf("done loading tiny model in the enclave..\n");
+    printf("Done loading trained network model in enclave..\n");
     set_batch_network(net, 1);
     srand(2222222);
     char **names = {"airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"};
@@ -150,6 +150,7 @@ void classify_tiny(list *sections, image *img, int top)
         hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
     top_k(predictions, net->outputs, top, indexes);
 
+    printf("Predictions: \n");
     for (int i = 0; i < top; ++i)
     {
         int index = indexes[i];

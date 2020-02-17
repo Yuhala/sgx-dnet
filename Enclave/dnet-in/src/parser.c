@@ -1414,7 +1414,7 @@ void load_weights_upto(network *net, char *filename, int start, int cutoff)
             fread(l.weights, sizeof(float), size, fp);
         }
     }
-    printf("Done loadiing weights..\n");
+    printf("Done loading weights..\n");
     ocall_close_file();
 }
 
