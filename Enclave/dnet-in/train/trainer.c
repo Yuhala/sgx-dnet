@@ -159,8 +159,8 @@ void classify_tiny(list *sections,list* labels, image *img, int top)
         int index = indexes[i];
         //if(net->hierarchy) printf("%d, %s: %f, parent: %s \n",index, names[index], predictions[index], (net->hierarchy->parent[index] >= 0) ? names[net->hierarchy->parent[index]] : "Root");
         //else printf("%s: %f\n",names[index], predictions[index]);
-        printf("%5.2f%%: %s ", predictions[index] * 100, "xxx");
-        printf("label index: %d\n",index);
+        printf("%5.2f%%: %s ", predictions[index] * 100,names[index]);
+        //printf("label index: %d\n",index);
     }
     if (r.data != im.data)
         free_image(r);
