@@ -146,7 +146,7 @@ void classify_tiny(list *sections, image *img, int top)
     float *X = r.data;
 
     float *predictions = network_predict(net, X);
-    printf("net outputs: %d\n",net->outputs):
+    printf("net outputs: %d\n",net->outputs);
     if (net->hierarchy)
         hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
     top_k(predictions, net->outputs, top, indexes);
