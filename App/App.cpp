@@ -21,6 +21,8 @@ data training_data, test_data;
 
 #define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/cifar.cfg"
 #define CIFAR_TEST_DATA "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/cifar/cifar-10-batches-bin/test_batch.bin"
+#define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/dog.jpg"
+#define TINY_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/tiny.cfg"
 
 /* Thread function --> only for testing purposes */
 void thread_func()
@@ -34,14 +36,12 @@ void thread_func()
 
 /**
  * Train cifar network in the enclave:
- * We first parse the model config file in untrusted memory; we can read it in the enclave via ocalls but its expensive
+ * We first parse the model config file in untrusted memory; we can read it in the enclave via ocalls but it's expensive
  * so we prefare to do it here as it has no obvious issues in terms of security
  * The parsed values are then passed to the enclave runtime and use to create the secure network in enclave memory
  */
 void train_cifar(char *cfgfile)
 {
-
-    //I don't save weights on disk yet --> NULL weightfile
 
     list *sections = read_cfg(cfgfile);
 
@@ -77,20 +77,24 @@ void test_cifar(char *cfgfile)
 }
 
 /**
- * Test a trained tiny darknet model
- * Define path to weighfile in trainer.c
+ * Classify an image with a trained Tiny Darknet model
+ * Define path to weightfile in trainer.c
  */
 void test_tiny(char *cfgfile)
 {
-
+    //read network config file
     list *sections = read_cfg(cfgfile);
+    //read image file
+    char *file = TINY_IMAGE;
+    char buff[256];
+    char *input = buff;
+    strncpy(input, file, 256);
+    image im = load_image_color(input, 0, 0);
 
-    /**
-     * The enclave will create a secure network struct in enclave memory
-     * using the parameters in the sections variable
-     */
-    ecall_tester(global_eid, sections, NULL, 0);
-    printf("Testing complete..\n");
+    //classify image in enclave
+    ecall_classify(global_eid, sections, &im);
+    free_image(im);
+    printf("Classification complete..\n");
 }
 
 /* Initialize the enclave:
@@ -132,7 +136,8 @@ int SGX_CDECL main(int argc, char *argv[])
     //std::thread trd[NUM_THREADS];
 
     //train_cifar(CIFAR_CFG_FILE);
-    test_cifar(CIFAR_CFG_FILE);
+    //test_cifar(CIFAR_CFG_FILE);
+    test_tiny(TINY_CFG);
     /*  
     for (int i = 0; i < NUM_THREADS; i++)
     {

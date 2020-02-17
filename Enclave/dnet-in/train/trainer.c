@@ -5,9 +5,8 @@
 #include "darknet.h"
 #include "trainer.h"
 
-#define CIFAR_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup"
-#define TINY_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup"
-#define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/dog.jpg"
+#define CIFAR_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/cifar.weights"
+#define TINY_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/tiny.weights"
 
 void test_fio()
 {
@@ -100,6 +99,11 @@ void ecall_tester(list *sections, data *test_data, int pmem)
     printf("ecall_tester..\n");
 }
 
+void ecall_classify(list *sections, image *im)
+{
+    classify_tiny(sections, im, 5);
+}
+
 void test_cifar(list *sections, data *test_data, int pmem)
 {
 
@@ -127,12 +131,35 @@ void test_cifar(list *sections, data *test_data, int pmem)
 /**
  * Classify an image with Tiny Darknet 
  */
-void classify_tiny(list *sections)
+void classify_tiny(list *sections, image *img, int top)
 {
-    //image to be classified
-    char *image_path = "";
+
     network *net = create_net_in(sections);
+    set_batch_network(net, 1);
+    srand(2222222);
+    char **names = {"airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"};
+    int *indexes = calloc(top, sizeof(int));
+    image im = *img;
+    image r = letterbox_image(im, net->w, net->h);
+
+    float *X = r.data;
+
+    float *predictions = network_predict(net, X);
+    if (net->hierarchy)
+        hierarchy_predictions(predictions, net->outputs, net->hierarchy, 1, 1);
+    top_k(predictions, net->outputs, top, indexes);
+
+    for (int i = 0; i < top; ++i)
+    {
+        int index = indexes[i];
+        //if(net->hierarchy) printf("%d, %s: %f, parent: %s \n",index, names[index], predictions[index], (net->hierarchy->parent[index] >= 0) ? names[net->hierarchy->parent[index]] : "Root");
+        //else printf("%s: %f\n",names[index], predictions[index]);
+        printf("%5.2f%%: %s\n", predictions[index] * 100, "xxx");
+    }
+    if (r.data != im.data)
+        free_image(r);
 }
+
 
 /**
  * Author: Peterson Yuhala
@@ -142,6 +169,7 @@ void classify_tiny(list *sections)
  * I do not need this in the enclave for my proof of concept ml application
  * Nevertheless this functionality could be easily ported into the enclave
  */
+
 /* void train_cifar_distill(char *cfgfile, char *weightfile)
 {
     srand(time(0));
