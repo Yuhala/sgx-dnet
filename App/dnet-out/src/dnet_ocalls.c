@@ -31,11 +31,29 @@ void ocall_free_list(list *list)
 }
 
 // 0 for read: 1 for write
-void ocall_open_file(const char *filename)
+void ocall_open_file(const char *filename, flag oflag)
 {
     if (!fp) //fp == NULL
     {
-        fp = fopen(filename, "r+");
+        switch (oflag)
+        {
+        case O_RDONLY:
+            fp = fopen(filename, "rb");
+            break;
+        case O_WRONLY:
+            fp = fopen(filename, "wb");
+        case O_RDPLUS:
+            fp = fopen(filename, "r+");
+        case O_WRPLUS:
+            fp = fopen(filename, "w+");
+        default:
+            printf("wrong open flag..\n");
+            break;
+        }
+    }
+    else
+    {
+        printf("problem with file pointer..\n");
     }
 }
 

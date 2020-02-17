@@ -22,7 +22,7 @@ enclave {
 
     untrusted {
 
-        void ocall_open_file([in,string]const char* filename);
+        void ocall_open_file([in,string]const char* filename, flag oflag);
         void ocall_close_file();
 
         void ocall_fread([out,size=size,count=nmemb]void *ptr, size_t size, size_t nmemb);

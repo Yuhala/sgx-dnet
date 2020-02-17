@@ -553,4 +553,18 @@ typedef struct
     list *options;
 } section;
 
+/**
+ * Author: Pyuhala 
+ * Added these for file I/O ocalls * 
+ * These are the common flags used in this darknet
+ * Other flags can be added
+ */
+
+typedef enum {
+    O_RDONLY, /* r or rb */
+    O_WRONLY, /* w or wb */
+    O_RDPLUS, /* r+ */
+    O_WRPLUS /* w+ */
+} flag;
+
 #endif /* DNET_TYPES_H */
