@@ -52,7 +52,7 @@ void ocall_open_file(const char *filename, flag oflag)
             fp = fopen(filename, "w+");
             break;
         default:
-            //nothing to do
+            ;//nothing to do
         }
     }
     else
