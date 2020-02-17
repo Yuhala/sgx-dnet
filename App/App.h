@@ -13,9 +13,7 @@
 #include "sgx_error.h" /* sgx_status_t */
 #include "sgx_eid.h"   /* sgx_enclave_id_t */
 
-
 #include "dnet-out/src/dnet_ocalls.h"
-
 
 #ifndef TRUE
 #define TRUE 1
@@ -36,9 +34,11 @@
 extern "C"
 {
 #endif
-    
+
     void train_cifar(char *cfgfile);
-    void test_cifar(char *cfgfile); 
+    void test_cifar(char *cfgfile);
+    void train_mnist(char *cfgfile);
+    void test_mnist(char *cfgfile);
     void test_tiny(char *cfgfile);
 
 #if defined(__cplusplus)

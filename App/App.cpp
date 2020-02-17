@@ -18,6 +18,10 @@ static int stack_val = 10;
 /* Darknet variables */
 data training_data, test_data;
 
+//---------------------------------------------------------------------------------
+/**
+ * Config files
+ */
 #define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/cifar.cfg"
 #define CIFAR_TEST_DATA "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/cifar/cifar-10-batches-bin/test_batch.bin"
 #define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/eagle.jpg"
@@ -34,6 +38,7 @@ void thread_func()
     //ecall_tester(global_eid,NULL,NULL,0);
 }
 
+//------------------------------------------------------------------------------------------------------------------------
 /**
  * Train cifar network in the enclave:
  * We first parse the model config file in untrusted memory; we can read it in the enclave via ocalls but it's expensive
@@ -75,7 +80,7 @@ void test_cifar(char *cfgfile)
     printf("Testing complete..\n");
     free_data(test_data);
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Classify an image with a trained Tiny Darknet model
  * Define path to weightfile in trainer.c
@@ -102,6 +107,48 @@ void test_tiny(char *cfgfile)
     free_image(im);
     printf("Classification complete..\n");
 }
+//--------------------------------------------------------------------------------------------------------------
+/**
+ * Train mnist classifier inside the enclave
+ * mnist: digit classification
+ */
+void train_mnist(char *cfgfile)
+{
+
+    list *sections = read_cfg(cfgfile);
+
+    //Load training data
+    training_data = load_all_cifar10();
+    /**
+     * The enclave will create a secure network struct in enclave memory
+     * using the parameters in the sections variable
+     */
+    ecall_trainer(global_eid, sections, &training_data, 0);
+    printf("Training complete..\n");
+    free_data(training_data);
+}
+
+/**
+ * Test a trained mnist model
+ * Define path to weighfile in trainer.c
+ */
+void test_mnist(char *cfgfile){
+
+    list *sections = read_cfg(cfgfile);
+
+    //Load test data
+    test_data = load_cifar10_data(CIFAR_TEST_DATA);
+    /**
+     * The enclave will create a secure network struct in enclave memory
+     * using the parameters in the sections variable
+     */
+    ecall_tester(global_eid, sections, &test_data, 0);
+    printf("Testing complete..\n");
+    free_data(test_data);
+}
+
+
+//--------------------------------------------------------------------------------------------------------------
 
 /* Initialize the enclave:
  * Call sgx_create_enclave to initialize an enclave instance
