@@ -18,12 +18,11 @@ static int stack_val = 10;
 /* Darknet variables */
 data training_data, test_data;
 
-
 #define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/cifar.cfg"
 #define CIFAR_TEST_DATA "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/cifar/cifar-10-batches-bin/test_batch.bin"
 #define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/giraffe.jpg"
 #define TINY_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/tiny.cfg"
-#define DATA_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/"
+#define DATA_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/tiny.data"
 
 /* Thread function --> only for testing purposes */
 void thread_func()
@@ -87,17 +86,14 @@ void test_tiny(char *cfgfile)
     list *sections = read_cfg(cfgfile);
     //read labels
     //-----------------------------------------------------------
-   /*  list *options = read_data_cfg(datacfg);
+    list *options = read_data_cfg(DATA_CFG);
 
     char *name_list = option_find_str(options, "names", 0);
-    if (!name_list)
-        name_list = option_find_str(options, "labels", "data/labels.list");
-    if (top == 0)
-        top = option_find_int(options, "top", 1);
-
-    int i = 0;
-    char **names = get_labels(name_list);
- */
+    /*  if (!name_list)
+        name_list = option_find_str(options, "labels", "data/labels.list"); */
+    int top = option_find_int(options, "top", 1);
+    list *plist = get_paths(name_list);
+    
     //----------------------------------------------------------
     //read image file
     char *file = TINY_IMAGE;
@@ -107,12 +103,10 @@ void test_tiny(char *cfgfile)
     image im = load_image_color(input, 0, 0);
 
     //classify image in enclave
-    ecall_classify(global_eid, sections, &im);
+    ecall_classify(global_eid, sections, plist, &im);
     free_image(im);
     printf("Classification complete..\n");
 }
-
-
 
 /* Initialize the enclave:
  * Call sgx_create_enclave to initialize an enclave instance

@@ -2,20 +2,17 @@
 #ifndef TRAINER_IN_H
 #define TRAINER_IN_H
 
-
 #if defined(__cplusplus)
 extern "C"
 {
 #endif
 
-void train_cifar(list *sections, data *training_data, int pmem);
-void test_cfiar(data *test_data, int pmem);
-void classify_tiny(list *sections, image *im, int top);
+    void train_cifar(list *sections, data *training_data, int pmem);
+    void test_cfiar(data *test_data, int pmem);
+    void classify_tiny(list *sections, list *labels, image *im, int top);
 
 #if defined(__cplusplus)
 }
 #endif
-
-
 
 #endif

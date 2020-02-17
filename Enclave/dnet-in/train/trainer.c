@@ -99,9 +99,9 @@ void ecall_tester(list *sections, data *test_data, int pmem)
     printf("ecall_tester..\n");
 }
 
-void ecall_classify(list *sections, image *im)
+void ecall_classify(list *sections,list* labels, image *im)
 {
-    classify_tiny(sections, im, 5);
+    classify_tiny(sections, labels, im, 5);
 }
 
 void test_cifar(list *sections, data *test_data, int pmem)
@@ -131,14 +131,16 @@ void test_cifar(list *sections, data *test_data, int pmem)
 /**
  * Classify an image with Tiny Darknet 
  */
-void classify_tiny(list *sections, image *img, int top)
+void classify_tiny(list *sections,list* labels, image *img, int top)
 {
 
     network *net = load_network(sections, TINY_WEIGHTS, 0);
     printf("Done loading trained network model in enclave..\n");
     set_batch_network(net, 1);
     srand(2222222);
-    char **names = {"airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"};
+    //get label names
+    char **names = (char **)list_to_array(labels);
+    //char **names = {"airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"};
     int *indexes = calloc(top, sizeof(int));
     image im = *img;
     image r = letterbox_image(im, net->w, net->h);
@@ -167,8 +169,7 @@ void classify_tiny(list *sections, image *img, int top)
 /**
  * Author: Peterson Yuhala
  * Knowledge distillation involves training a smaller network with 
- * a larger network.
- * So we pass the weights as param
+ * a larger network. 
  * I do not need this in the enclave for my proof of concept ml application
  * Nevertheless this functionality could be easily ported into the enclave
  */
