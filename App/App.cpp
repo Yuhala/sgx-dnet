@@ -24,7 +24,7 @@ data training_data, test_data;
  */
 #define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/cifar.cfg"
 #define CIFAR_TEST_DATA "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/cifar/cifar-10-batches-bin/test_batch.bin"
-#define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/eagle.jpg"
+#define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/person.jpg"
 #define TINY_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/tiny.cfg"
 #define DATA_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/tiny.data"
 
