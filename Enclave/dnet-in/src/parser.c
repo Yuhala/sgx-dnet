@@ -1322,7 +1322,6 @@ void load_convolutional_weights(layer l, int fp)
 void load_weights_upto(network *net, char *filename, int start, int cutoff)
 {
 
-    printf("Loading weights from weights file..\n");
     /* FILE *fp = fopen(filename, "rb");
     if(!fp) file_error(filename); */
     //ocall_open_weights_file();
@@ -1414,11 +1413,13 @@ void load_weights_upto(network *net, char *filename, int start, int cutoff)
             fread(l.weights, sizeof(float), size, fp);
         }
     }
-    printf("Done loading weights..\n");
+
     ocall_close_file();
 }
 
 void load_weights(network *net, char *filename)
 {
+    printf("Loading weights from weights file..\n");
     load_weights_upto(net, filename, 0, net->n);
+    printf("Done loading weights..\n");
 }
