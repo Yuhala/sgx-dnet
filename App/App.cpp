@@ -42,7 +42,7 @@ void thread_func()
 /**
  * Train cifar network in the enclave:
  * We first parse the model config file in untrusted memory; we can read it in the enclave via ocalls but it's expensive
- * so we prefare to do it here as it has no obvious issues in terms of security
+ * so we prefer to do it here as it has no obvious issues in terms of security
  * The parsed values are then passed to the enclave runtime and use to create the secure network in enclave memory
  */
 void train_cifar(char *cfgfile)
