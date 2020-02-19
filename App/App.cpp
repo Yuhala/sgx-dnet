@@ -89,11 +89,11 @@ void test_tiny(char *cfgfile)
 {
     //read network config file
     list *sections = read_cfg(cfgfile);
-    //read labels    
+    //read labels
     list *options = read_data_cfg(DATA_CFG);
-    char *name_list = option_find_str(options, "names", 0);   
+    char *name_list = option_find_str(options, "names", 0);
     list *plist = get_paths(name_list);
-   
+
     //read image file
     char *file = TINY_IMAGE;
     char buff[256];
@@ -112,17 +112,12 @@ void test_tiny(char *cfgfile)
  * Train mnist classifier inside the enclave
  * mnist: digit classification
  */
+
 void train_mnist(char *cfgfile)
 {
-
+    //TODO
     list *sections = read_cfg(cfgfile);
-
-    //Load training data
     training_data = load_all_cifar10();
-    /**
-     * The enclave will create a secure network struct in enclave memory
-     * using the parameters in the sections variable
-     */
     ecall_trainer(global_eid, sections, &training_data, 0);
     printf("Training complete..\n");
     free_data(training_data);
@@ -132,21 +127,16 @@ void train_mnist(char *cfgfile)
  * Test a trained mnist model
  * Define path to weighfile in trainer.c
  */
-void test_mnist(char *cfgfile){
+void test_mnist(char *cfgfile)
+{
 
+    //TODO
     list *sections = read_cfg(cfgfile);
-
-    //Load test data
     test_data = load_cifar10_data(CIFAR_TEST_DATA);
-    /**
-     * The enclave will create a secure network struct in enclave memory
-     * using the parameters in the sections variable
-     */
     ecall_tester(global_eid, sections, &test_data, 0);
     printf("Testing complete..\n");
     free_data(test_data);
 }
-
 
 //--------------------------------------------------------------------------------------------------------------
 

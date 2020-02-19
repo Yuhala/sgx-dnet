@@ -1,6 +1,9 @@
-/**
- * Author: Peterson Yuhala
+/*
+ * Created on Wed Feb 15 2020
+ *
+ * Copyright (c) 2020 Peterson Yuhala, IIUN
  */
+
 
 #ifndef _APP_H_
 #define _APP_H_
