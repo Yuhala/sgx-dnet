@@ -42,7 +42,7 @@ void thread_func()
 /**
  * Train cifar network in the enclave:
  * We first parse the model config file in untrusted memory; we can read it in the enclave via ocalls but it's expensive
- * so we prefare to do it here as it has no obvious issues in terms of security
+ * so we prefer to do it here as it has no obvious issues in terms of security
  * The parsed values are then passed to the enclave runtime and use to create the secure network in enclave memory
  */
 void train_cifar(char *cfgfile)
@@ -116,11 +116,11 @@ void test_tiny(char *cfgfile)
 void train_mnist(char *cfgfile)
 {
     //TODO
-    list *sections = read_cfg(cfgfile);
+    /* list *sections = read_cfg(cfgfile);
     training_data = load_all_cifar10();
     ecall_trainer(global_eid, sections, &training_data, 0);
     printf("Training complete..\n");
-    free_data(training_data);
+    free_data(training_data); */
 }
 
 /**
@@ -131,11 +131,11 @@ void test_mnist(char *cfgfile)
 {
 
     //TODO
-    list *sections = read_cfg(cfgfile);
+    /* list *sections = read_cfg(cfgfile);
     test_data = load_cifar10_data(CIFAR_TEST_DATA);
     ecall_tester(global_eid, sections, &test_data, 0);
     printf("Testing complete..\n");
-    free_data(test_data);
+    free_data(test_data); */
 }
 
 //--------------------------------------------------------------------------------------------------------------
