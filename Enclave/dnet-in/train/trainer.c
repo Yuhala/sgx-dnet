@@ -68,7 +68,6 @@ void train_cifar(list *sections, data *training_data, int pmem)
         if (*net->seen / N > epoch)
         {
             //TODO: save weights 
-
             
         }
         if (get_current_batch(net) % 100 == 0)
