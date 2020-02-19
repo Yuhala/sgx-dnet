@@ -8,6 +8,7 @@
 #define CIFAR_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/cifar.weights"
 #define TINY_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/tiny.weights"
 
+//For testing my enclave file I/O ocall wrapper fxns..
 void test_fio()
 {
     ocall_open_file("file.txt", O_WRONLY);
@@ -66,32 +67,24 @@ void train_cifar(list *sections, data *training_data, int pmem)
                get_current_batch(net), (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), *net->seen);
         if (*net->seen / N > epoch)
         {
-            //epoch = *net->seen / N;
-            //printf("Epoch: %d\n", epoch);
-            //char buff[256];
-            //sprintf(buff, "%s/%s_%d.weights",backup_directory,base, epoch);
-            //save_weights(net, buff);
+            //TODO: save weights 
+
+            
         }
         if (get_current_batch(net) % 100 == 0)
         {
-            //run net on test data and note accuracy
-
-            // char buff[256];
-            // sprintf(buff, "%s/%s.backup",backup_directory,base);
-            // save_weights(net, buff);
-            printf("modulo 100 is 0..save weights here..\n");
+           
+           //TODO: save weights
         }
     }
 
-    //char buff[256];
-    //sprintf(buff, "%s/%s.weights", backup_directory, base);
-    //save_weights(net, buff);
+   
 
-    //free_network(net);
+    free_network(net);
     //TODO
-    //print training terminated
+   
 
-    //free_data(train);
+   
 }
 void ecall_tester(list *sections, data *test_data, int pmem)
 {
