@@ -42,7 +42,6 @@ data load_mnist_images(std::string path)
     // Read file
     std::ifstream file(path, std::ios::binary);
 
-    
     uint32_t magic_num = 0;
     uint32_t num_images = 0;
     uint32_t rows = 0;
@@ -50,7 +49,8 @@ data load_mnist_images(std::string path)
     uint32_t image_size = 0;
 
     // Read the magic num (file signature) and dataset meta data
-    assert(file.is_open);
+    if (!file.is_open)
+        ERROR();
     file.read((char *)&magic_num, sizeof(magic_num));
     magic_num = swap_bytes(magic_num);
     if (magic_num != 2051)
@@ -90,11 +90,12 @@ matrix load_mnist_labels(std::string path)
 {
     // Read file
     std::ifstream file(path, std::ios::binary);
-   
+
     uint32_t magic_num = 0;
     uint32_t num_labels = 0;
 
-    assert(file.is_open);
+    if (!file.is_open)
+        ERROR();
     // Read the magic num (file signature) and dataset meta data
     file.read((char *)&magic_num, sizeof(magic_num));
     magic_num = swap_bytes(magic_num);

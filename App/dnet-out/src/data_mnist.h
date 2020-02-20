@@ -17,16 +17,15 @@
 #include <cstring>
 #include <cstdint>
 #include <cstdio>
-#include <cassert>
 
 // basic file operations
 #include <iostream>
 #include <fstream>
 
-#define ERROR()                                                               \
-    {                                                                         \
-        std::cout << "I/O error in:" << __func__ << ": " << __LINE__ << endl; \
-        return;                                                               \
+#define ERROR()                                                                    \
+    {                                                                              \
+        std::cout << "I/O error in:" << __func__ << ": " << __LINE__ << std::endl; \
+        return;                                                                    \
     }
 
 uint32_t swap_bytes(uint32_t);
