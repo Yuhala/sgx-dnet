@@ -83,7 +83,7 @@ data load_mnist_images(std::string path)
     }
     //make X the image data values of d
     d.X = X;
-    // print_matrix(X);
+    print_matrix(X);
     file.close();
     return d;
 }
@@ -117,6 +117,10 @@ matrix load_mnist_labels(std::string path)
      * Y.vals[2]|0|1|0|
      */
 
+    /**
+     * PYuhala
+     * 1 byte (sizeof char) is enough to store numbers from 0 to 9
+     */
     char label_class;
     for (int i = 0; i < num_labels; i++)
     {
@@ -127,7 +131,7 @@ matrix load_mnist_labels(std::string path)
         std::cout << "Label: " << (int)label_class << std::endl;
     }
 
-    print_matrix(Y);
+    //print_matrix(Y);
     file.close();
     return Y;
 }
