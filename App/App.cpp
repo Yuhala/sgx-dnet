@@ -27,6 +27,8 @@ data training_data, test_data;
 #define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/person.jpg"
 #define TINY_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/tiny.cfg"
 #define DATA_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/tiny.data"
+#define MNIST_IMAGES "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/train-images-idx3-ubyte"
+#define MNIST_LABELS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/train-labels-idx1-ubyte"
 
 /* Thread function --> only for testing purposes */
 void thread_func()
@@ -121,6 +123,9 @@ void train_mnist(char *cfgfile)
     ecall_trainer(global_eid, sections, &training_data, 0);
     printf("Training complete..\n");
     free_data(training_data); */
+
+    data train = load_mnist_images(MNIST_IMAGES);
+    train.y = load_mnist_labels(MNIST_LABELS);
 }
 
 /**
@@ -180,7 +185,10 @@ int SGX_CDECL main(int argc, char *argv[])
 
     //train_cifar(CIFAR_CFG_FILE);
     //test_cifar(CIFAR_CFG_FILE);
-    test_tiny(TINY_CFG);
+    //test_tiny(TINY_CFG);
+    train_mnist(NULL);
+
+    
     /*  
     for (int i = 0; i < NUM_THREADS; i++)
     {

@@ -7,7 +7,30 @@
 #ifndef DATA_MNIST_H
 #define DATA_MNIST_H
 
+#include "data.h"
+#include "utils.h"
+#include "image.h"
+#include "cuda.h"
 
+//#include <stdio.h>
+#include <stdlib.h>
+#include <cstring>
+#include <cstdint>
+#include <cstdio>
+#include <cassert>
 
+// basic file operations
+#include <iostream>
+#include <fstream>
+
+#define ERROR()                                                               \
+    {                                                                         \
+        std::cout << "I/O error in:" << __func__ << ": " << __LINE__ << endl; \
+        return;                                                               \
+    }
+
+uint32_t swap_bytes(uint32_t);
+data load_mnist_images(std::string path);
+matrix load_mnist_labels(std::string path);
 
 #endif /* DATA_MNIST_H */

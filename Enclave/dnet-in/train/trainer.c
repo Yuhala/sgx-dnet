@@ -77,7 +77,6 @@ void train_cifar(list *sections, data *training_data, int pmem)
            //TODO: save weights
         }
     }
-
    
 
     free_network(net);
