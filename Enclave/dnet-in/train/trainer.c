@@ -28,15 +28,56 @@ void test_fio()
 void ecall_trainer(list *sections, data *training_data, int pmem)
 {
 
-    test_fio();
-    return;
-
-    train_cifar(sections, training_data, pmem);
+    //test_fio();
+    train_mnist(sections, training_data, pmem);
+    //train_cifar(sections, training_data, pmem);
 }
 
 /**
  * Training algorithms for different models
  */
+
+void train_mnist(list *sections, data *training_data, int pmem)
+{
+    //TODO: pointer checks
+    printf("Training mnist in enclave..\n"); //minimize the number of prints when doing benchmarking as they perform expensive enclave transitions..
+
+    network *net = create_net_in(sections);
+    printf("Done creating network in enclave...\n");
+
+    srand(12345);
+    float avg_loss = -1;
+    printf("Learning Rate: %g, Momentum: %g, Decay: %g\n", net->learning_rate, net->momentum, net->decay);
+    int classes = 10;
+    int N = 60000;
+    int epoch = (*net->seen) / N;
+    data train = *training_data;
+    printf("Max batches: %d\n", net->max_batches);
+
+    while (get_current_batch(net) < net->max_batches || net->max_batches == 0)
+    {
+
+        float loss = train_network_sgd(net, train, 1);
+        if (avg_loss == -1)
+            avg_loss = loss;
+        avg_loss = avg_loss * .95 + loss * .05;
+        printf("Batch num: %ld, Seen: %.3f: Loss: %f, Avg loss: %f avg, L. rate: %f rate,Images seen: %ld \n",
+               get_current_batch(net), (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), *net->seen);
+        if (*net->seen / N > epoch)
+        {
+            //TODO: save weights
+        }
+        if (get_current_batch(net) % 100 == 0)
+        {
+
+            //TODO: save weights
+        }
+    }
+
+    printf("Done training network..\n");
+    //free_network(net);
+    //TODO
+}
 
 void train_cifar(list *sections, data *training_data, int pmem)
 {
@@ -67,24 +108,19 @@ void train_cifar(list *sections, data *training_data, int pmem)
                get_current_batch(net), (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), *net->seen);
         if (*net->seen / N > epoch)
         {
-            //TODO: save weights 
-
-            
+            //TODO: save weights
         }
         if (get_current_batch(net) % 100 == 0)
         {
-           
-           //TODO: save weights
+
+            //TODO: save weights
         }
     }
-   
 
     free_network(net);
     //TODO
-   
-
-   
 }
+
 void ecall_tester(list *sections, data *test_data, int pmem)
 {
     //do pointer checks
