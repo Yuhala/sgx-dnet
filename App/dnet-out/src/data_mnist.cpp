@@ -10,7 +10,6 @@
 //number of classes in mnist dataset
 #define NUM_CLASSES 10
 
-
 /**
  * change byte endianness
  * E.g: 0xAABBCCDD --> 0xDDCCBBAA
@@ -40,7 +39,7 @@ uint32_t swap_bytes(uint32_t val)
  */
 data load_mnist_images(std::string path)
 {
-    
+
     // Read file
     std::ifstream file(path, std::ios::binary);
 
@@ -55,7 +54,7 @@ data load_mnist_images(std::string path)
         ERROR(); */
     file.read((char *)&magic_num, sizeof(magic_num));
     magic_num = swap_bytes(magic_num);
-    std::cout << " image file magic num is: "<<magic_num<<std::endl;
+
     if (magic_num != 2051)
         throw std::runtime_error("Invalid MNIST image file!");
 
@@ -96,13 +95,13 @@ matrix load_mnist_labels(std::string path)
 
     uint32_t magic_num = 0;
     uint32_t num_labels = 0;
-/* 
+    /* 
     if (!file.is_open)
         ERROR(); */
     // Read the magic num (file signature) and dataset meta data
     file.read((char *)&magic_num, sizeof(magic_num));
     magic_num = swap_bytes(magic_num);
-    std::cout << " label file magic num is: "<<magic_num<<std::endl;
+
     if (magic_num != 2049)
         throw std::runtime_error("Invalid MNIST label file!");
 
@@ -123,6 +122,7 @@ matrix load_mnist_labels(std::string path)
     {
         //label is an int in [0,9]
         file.read((char *)label_class, 1);
+        label_class = (int)swap_bytes(label_class);
         Y.vals[i][label_class] = 1;
     }
 
