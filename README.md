@@ -10,19 +10,19 @@
  
 
 ## Training a model
-- To train a model, add a routine in `App.cpp` similar to the example cifar trainer: `train_cifar`. 
+- To train a model, add a routine in `App.cpp` similar to the example cifar trainer: `train_mnist`. 
 - Create a corresponding trainer routine in the trusted side which will be called via the `ecall_trainer` ecall.
 - Read and parse the model config file into a `list` data structure in the untrusted runtime. 
 - Read the training data into the global `training_data` object/variable.
 - Perform an ecall with the list and training data objects; the secure training routine is performed within the ecall.
 - Modify `Trainer.edl` or `Enclave.edl` accordingly if you need to add more e/ocalls.
-- See the example trainer with the cifar model for more inspiration on how to train and test other models.
+- To test the mnist training and testing, download the 4 mnist training and test data and labels here:[mnist data](http://yann.lecun.com/exdb/mnist/), decompress the files and add them to the `App/dnet-out/data/mnist` folder before launching the training and test routines.
+- See the example trainer with the mnist model for more inspiration on how to train and test other models.
 
 ## Testing the model
 - To test the model after training, add a routine in `App.cpp` which takes the test data as input.
 - Add a test routine in the enclave/trusted section which performs inference on a trained `network` object. This object could reside in enclave memory or be created from a weights file.
 - Perform an ecall into the enclave runtime with the test data, and run your test routine within the enclave.
-- To test the example cifar trainer, download and copy the cifar training data into `App/dnet-out/data/cifar`, modify the cifar config file in `App/dnet-out/cfg/cifar.cfg` accordingly, build and run the project.
 
 ## Doing inference
 - By providing a weight file and corresponding labels, you can perform inference on a pre-trained network model.
