@@ -31,7 +31,7 @@ extern "C"
         std::cout << "I/O error in:" << __func__ << ": " << __LINE__ << std::endl; \
     }
 
-uint32_t swap_bytes(uint32_t);
+uint32_t swap_bytes(uint32_t *);
 data load_mnist_images(std::string path);
 matrix load_mnist_labels(std::string path);
 
