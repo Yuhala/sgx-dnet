@@ -93,7 +93,7 @@ data load_mnist_images(std::string path)
     }
     //make X the image data values of d
     d.X = X;
-    scale_data_rows(d, 1. / 255);
+    //scale_data_rows(d, 1. / 255);
     print_matrix(X);
     file.close();
     delete[] pixels;
