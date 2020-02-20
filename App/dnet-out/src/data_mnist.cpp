@@ -55,6 +55,7 @@ data load_mnist_images(std::string path)
         ERROR(); */
     file.read((char *)&magic_num, sizeof(magic_num));
     magic_num = swap_bytes(magic_num);
+    std::cout << " image file magic num is: "<<magic_num<<std::endl;
     if (magic_num != 2051)
         throw std::runtime_error("Invalid MNIST image file!");
 
@@ -101,6 +102,7 @@ matrix load_mnist_labels(std::string path)
     // Read the magic num (file signature) and dataset meta data
     file.read((char *)&magic_num, sizeof(magic_num));
     magic_num = swap_bytes(magic_num);
+    std::cout << " label file magic num is: "<<magic_num<<std::endl;
     if (magic_num != 2049)
         throw std::runtime_error("Invalid MNIST label file!");
 
