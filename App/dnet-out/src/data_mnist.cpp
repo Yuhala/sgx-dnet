@@ -23,7 +23,7 @@ uint32_t swap_bytes(uint32_t val)
 /**
  * Author: PYuhala
  * Mnist metadata:
- * There are 4 files after decompressing are: 
+ * There 4 files after decompressing are: 
  * train-images-idx3-ubyte: training set images (45MB)
  * train-labels-idx1-ubyte: training set labels (60KB)
  * t10k-images-idx3-ubyte:  test set images (7.5MB)
@@ -136,10 +136,9 @@ matrix load_mnist_labels(std::string path)
     for (int i = 0; i < num_labels; i++)
     {
         //label is an int in [0,9]
-        file.read(&label_class, 1);
-        //label_class = (int)swap_bytes(label_class);
+        file.read(&label_class, 1);        
         Y.vals[i][(int)label_class] = 1;
-        std::cout << "Label: " << (int)label_class << std::endl;
+        //std::cout << "Label: " << (int)label_class << std::endl;
     }
 
     //print_matrix(Y);
