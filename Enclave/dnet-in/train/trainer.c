@@ -55,7 +55,7 @@ void train_mnist(list *sections, data *training_data, int pmem)
         if (avg_loss == -1)
             avg_loss = loss;
         avg_loss = avg_loss * .95 + loss * .05;
-        progress = get_current_batch(net) / net->max_batches;
+        progress = (float)(*net->seen) / N;
         printf("Progress: %ld%% Avg loss: %f avg, L. rate: %f ,Images seen: %ld \n",
                progress * 100, avg_loss, get_current_rate(net), *net->seen);
         if (*net->seen / N > epoch)
