@@ -83,7 +83,7 @@ data load_mnist_images(std::string path)
     }
     //make X the image data values of d
     d.X = X;
-    print_matrix(X);
+   // print_matrix(X);
     file.close();
     return d;
 }
