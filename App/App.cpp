@@ -123,9 +123,10 @@ void train_mnist(char *cfgfile)
     ecall_trainer(global_eid, sections, &training_data, 0);
     printf("Training complete..\n");
     free_data(training_data); */
-
-    data train = load_mnist_images(MNIST_IMAGES);
-    train.y = load_mnist_labels(MNIST_LABELS);
+    std::string img_path = MNIST_IMAGES;
+    std::string label_path = MNIST_LABELS;
+    data train = load_mnist_images(img_path);
+    train.y = load_mnist_labels(label_path);
 }
 
 /**
@@ -188,7 +189,7 @@ int SGX_CDECL main(int argc, char *argv[])
     //test_tiny(TINY_CFG);
     train_mnist(NULL);
 
-    
+
     /*  
     for (int i = 0; i < NUM_THREADS; i++)
     {
