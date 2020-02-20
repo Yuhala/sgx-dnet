@@ -53,7 +53,7 @@ void train_mnist(list *sections, data *training_data, int pmem)
     int epoch = (*net->seen) / N;
     data train = *training_data;
     printf("Max batches: %d\n", net->max_batches);
-
+    
     while (get_current_batch(net) < net->max_batches || net->max_batches == 0)
     {
 
