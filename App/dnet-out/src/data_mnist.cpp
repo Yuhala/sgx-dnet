@@ -84,7 +84,7 @@ data load_mnist_images(std::string path)
         //copy byte by byte into X.vals
         for (int j = 0; j < X.cols; j++)
         {
-            X.vals[i][j] = (double)pixels[j];
+            X.vals[i][j] = (float)pixels[j];
         }
         //memcpy(X.vals[i], pixels, image_size);
     }
