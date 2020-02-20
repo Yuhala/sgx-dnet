@@ -108,7 +108,7 @@ OBJ_IN := activation_layer.o activations.o avgpool_layer.o batchnorm_layer.o bla
 		  upsample_layer.o utils.o image.o yolo_layer.o network.o data.o option_list.o parser.o
 
 
-OBJ_OUT := blas.o box.o data.o dnet_ocalls.o image.o list.o matrix.o option_list.o parser.o tree.o utils.o 
+OBJ_OUT := blas.o box.o data.o dnet_ocalls.o image.o list.o matrix.o option_list.o parser.o tree.o utils.o data_mnist.o
 
 
 DNET_OBJS_IN := $(addprefix $(DNET_IN_BASE)/obj/, $(OBJ_IN)) 
