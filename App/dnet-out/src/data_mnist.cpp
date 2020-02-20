@@ -52,7 +52,7 @@ data load_mnist_images(std::string path)
     // Read the magic num (file signature) and dataset meta data
     /* if (!file.is_open)
         ERROR(); */
-    file.read((char *)&magic_num, sizeof(magic_num));
+    file.read(reinterpret_cast<char *>(&magic_num), sizeof(magic_num));
     magic_num = swap_bytes(magic_num);
 
     if (magic_num != 2051)
@@ -66,6 +66,7 @@ data load_mnist_images(std::string path)
     cols = swap_bytes(cols);
     image_size = rows * cols;
 
+    char *pixels = new char[image_size];
     //create data matrices
     data d = {0};
     d.shallow = 0;
@@ -79,7 +80,13 @@ data load_mnist_images(std::string path)
      */
     for (int i = 0; i < num_images; i++)
     {
-        file.read((char *)X.vals[i], image_size);
+        file.read(pixels, image_size);
+        //copy byte by byte into X.vals
+        for (int j = 0; j < X.cols; j++)
+        {
+            X.vals[i][j] = (double)pixels[j];
+        }
+        //memcpy(X.vals[i], pixels, image_size);
     }
     //make X the image data values of d
     d.X = X;
