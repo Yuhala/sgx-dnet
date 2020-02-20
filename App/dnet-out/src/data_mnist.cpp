@@ -10,6 +10,7 @@
 //number of classes in mnist dataset
 #define NUM_CLASSES 10
 
+
 /**
  * change byte endianness
  * E.g: 0xAABBCCDD --> 0xDDCCBBAA
@@ -39,6 +40,7 @@ uint32_t swap_bytes(uint32_t val)
  */
 data load_mnist_images(std::string path)
 {
+    
     // Read file
     std::ifstream file(path, std::ios::binary);
 
@@ -49,8 +51,8 @@ data load_mnist_images(std::string path)
     uint32_t image_size = 0;
 
     // Read the magic num (file signature) and dataset meta data
-    if (!file.is_open)
-        ERROR();
+    /* if (!file.is_open)
+        ERROR(); */
     file.read((char *)&magic_num, sizeof(magic_num));
     magic_num = swap_bytes(magic_num);
     if (magic_num != 2051)
@@ -93,9 +95,9 @@ matrix load_mnist_labels(std::string path)
 
     uint32_t magic_num = 0;
     uint32_t num_labels = 0;
-
+/* 
     if (!file.is_open)
-        ERROR();
+        ERROR(); */
     // Read the magic num (file signature) and dataset meta data
     file.read((char *)&magic_num, sizeof(magic_num));
     magic_num = swap_bytes(magic_num);

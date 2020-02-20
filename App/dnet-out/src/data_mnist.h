@@ -25,7 +25,7 @@
 #define ERROR()                                                                    \
     {                                                                              \
         std::cout << "I/O error in:" << __func__ << ": " << __LINE__ << std::endl; \
-        return;                                                                    \
+                                                                            \
     }
 
 uint32_t swap_bytes(uint32_t);
