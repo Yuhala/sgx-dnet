@@ -33,7 +33,7 @@ void ecall_trainer(list *sections, data *training_data, int pmem)
 void train_mnist(list *sections, data *training_data, int pmem)
 {
     //TODO: pointer checks
-    printf("Training mnist in enclave..\n"); 
+    printf("Training mnist in enclave..\n");
     network *net = create_net_in(sections);
     printf("Done creating network in enclave...\n");
 
@@ -130,10 +130,6 @@ void ecall_classify(list *sections, list *labels, image *im)
  */
 void test_mnist(list *sections, data *test_data, int pmem)
 {
-
-
-
-
     if (pmem)
     {
         //test on pmem model
@@ -148,14 +144,14 @@ void test_mnist(list *sections, data *test_data, int pmem)
         return;
     }
     srand(12345);
-   
+
     float avg_acc = 0;
     data test = *test_data;
     image im;
 
     for (int i = 0; i < test.X.rows; ++i)
     {
-         im = float_to_image(28, 28, 1, test.X.vals[i]);
+        im = float_to_image(28, 28, 1, test.X.vals[i]);
 
         float pred[10] = {0};
 
@@ -169,8 +165,8 @@ void test_mnist(list *sections, data *test_data, int pmem)
         int class = max_index(test.y.vals[i], 10);
         if (index == class)
             avg_acc += 1;
-        
-       printf("%4d: %.2f%%\n", i, 100. * avg_acc / (i + 1)); //un/comment to see/hide accuracy progress
+
+        printf("%4d: %.2f%%\n", i, 100. * avg_acc / (i + 1)); //un/comment to see/hide accuracy progress
     }
     printf("Overall prediction accuracy: %2f%%\n", 100. * avg_acc / test.X.rows);
     free_network(net);
