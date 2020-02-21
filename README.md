@@ -28,6 +28,9 @@
 - To test the model after training, add a routine in `App.cpp` which takes the test data as input.
 - Add a test routine in the enclave/trusted section which performs inference on a trained `network` object. This object could reside in enclave memory or be created from a weights file.
 - Perform an ecall into the enclave runtime with the test data, and run your test routine within the enclave.
+- Sample output: testing trained mnist model.
+
+![mnist test](App/dnet-out/data/mnist_test.png)
 
 ## Doing inference
 - By providing a weight file and corresponding labels, you can perform inference on a pre-trained network model.
