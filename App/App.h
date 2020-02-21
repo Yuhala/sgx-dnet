@@ -17,6 +17,7 @@
 #include "sgx_eid.h"   /* sgx_enclave_id_t */
 
 #include "dnet-out/src/dnet_ocalls.h"
+#include "dnet-out/src/data_mnist.h"
 
 #ifndef TRUE
 #define TRUE 1

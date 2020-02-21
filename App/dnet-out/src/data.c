@@ -1485,8 +1485,8 @@ data load_all_cifar10()
     data d = {0};
     d.shallow = 0;
     int i,j,b;
-    matrix X = make_matrix(50000, 3072);
-    matrix y = make_matrix(50000, 10);
+    matrix X = make_matrix(50000, 3072);//training images
+    matrix y = make_matrix(50000, 10);//corresponding labels
     d.X = X;
     d.y = y;
 

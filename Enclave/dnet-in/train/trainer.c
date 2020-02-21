@@ -1,50 +1,84 @@
 
-//#include "Enclave.h"
-//#include "Enclave_t.h"
 #include "dnet_sgx_utils.h"
 #include "darknet.h"
 #include "trainer.h"
 
 #define CIFAR_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/cifar.weights"
 #define TINY_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/tiny.weights"
+#define MNIST_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/mnist.weights"
 
-//For testing my enclave file I/O ocall wrapper fxns..
-void test_fio()
-{
-    ocall_open_file("file.txt", O_WRONLY);
-    char c[] = "enclave file i/o test";
-    fwrite(c, strlen(c) + 1, 1, 0);
-    ocall_close_file();
-    //dont have fseek ocall so I close and reopen for now :-)
-    char buffer[100];
+//global network model
+//network *net = NULL;
 
-    ocall_open_file("file.txt", O_RDONLY);
-
-    fread(buffer, strlen(c) + 1, 1, 0);
-    printf("String: %s\n", buffer);
-    ocall_close_file();
-}
+/**
+ * PYuhala
+ * The network training avg accuracy should decrease
+ * as the network learns
+ * Batch size: the number of data samples read for one training epoch/iteration
+ * If accuracy not high enough increase max batch
+ */
 
 void ecall_trainer(list *sections, data *training_data, int pmem)
 {
 
-    test_fio();
-    return;
-
-    train_cifar(sections, training_data, pmem);
+    //test_fio();
+    train_mnist(sections, training_data, pmem);
+    //train_cifar(sections, training_data, pmem);
 }
 
 /**
  * Training algorithms for different models
  */
 
+void train_mnist(list *sections, data *training_data, int pmem)
+{
+    //TODO: pointer checks
+    printf("Training mnist in enclave..\n"); //minimize the number of prints when doing benchmarking as they perform expensive enclave transitions..
+
+    network *net = create_net_in(sections);
+    printf("Done creating network in enclave...\n");
+
+    srand(12345);
+    float avg_loss = -1;
+    printf("Learning Rate: %g, Momentum: %g, Decay: %g\n", net->learning_rate, net->momentum, net->decay);
+    int classes = 10;
+    int N = 60000; //number of training images
+    int epoch = (*net->seen) / N;
+    int cur_batch = 0;
+    float progress = 0;
+    data train = *training_data;
+    printf("Max batches: %d\n", net->max_batches);
+    char *path = MNIST_WEIGHTS;
+
+    while (cur_batch < net->max_batches || net->max_batches == 0)
+    {
+        cur_batch = get_current_batch(net);
+        float loss = train_network_sgd(net, train, 1);
+        if (avg_loss == -1)
+            avg_loss = loss;
+        avg_loss = avg_loss * .95 + loss * .05;
+
+        progress = ((double)cur_batch / net->max_batches) * 100;
+        printf("Batch num: %ld, Seen: %.3f: Loss: %f, Avg loss: %f avg, L. rate: %f, Progress: %.2f%% \n",
+               cur_batch, (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), progress);
+
+        if (cur_batch % 5 == 0)
+        {
+            printf("Saving weights to weight file..\n");
+            save_weights(net, path);
+        }
+    }
+
+    printf("Done training mnist network..\n");
+    free_network(net);
+}
+
 void train_cifar(list *sections, data *training_data, int pmem)
 {
     //TODO: pointer checks
-    printf("In ecall_trainer..\n"); //minimize the number of prints when doing benchmarking as they perform expensive enclave transitions..
 
     network *net = create_net_in(sections);
-    printf("done creating network in enclave...\n");
+    printf("Done creating network in enclave...\n");
 
     srand(12345);
     float avg_loss = -1;
@@ -54,46 +88,90 @@ void train_cifar(list *sections, data *training_data, int pmem)
     int N = 50000;
     int epoch = (*net->seen) / N;
     data train = *training_data;
+    float progress = 0;
+    int cur_batch = 0;
+    char *path = CIFAR_WEIGHTS;
     printf("Max batches: %d\n", net->max_batches);
 
-    while (get_current_batch(net) < net->max_batches || net->max_batches == 0)
+    while (cur_batch < net->max_batches || net->max_batches == 0)
     {
-
+        cur_batch = get_current_batch(net);
         float loss = train_network_sgd(net, train, 1);
         if (avg_loss == -1)
             avg_loss = loss;
         avg_loss = avg_loss * .95 + loss * .05;
-        printf("Batch num: %ld, Seen: %.3f: Loss: %f, Avg loss: %f avg, L. rate: %f rate,Images seen: %ld \n",
-               get_current_batch(net), (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), *net->seen);
-        if (*net->seen / N > epoch)
+
+        progress = ((double)cur_batch / net->max_batches) * 100;
+        printf("Batch num: %ld, Seen: %.3f: Loss: %f, Avg loss: %f avg, L. rate: %f, Progress: %.2f%% \n",
+               cur_batch, (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), progress);
+
+        if (cur_batch % 5 == 0)
         {
-            //TODO: save weights 
-            
-        }
-        if (get_current_batch(net) % 100 == 0)
-        {
-           
-           //TODO: save weights
+            printf("Saving weights to weight file..\n");
+            save_weights(net, path);
         }
     }
 
-   
-
+    printf("Done training cifar model..\n");
     free_network(net);
-    //TODO
-   
-
-   
 }
+
 void ecall_tester(list *sections, data *test_data, int pmem)
 {
-    //do pointer checks
-    printf("ecall_tester..\n");
+    test_mnist(sections, test_data, pmem);
 }
 
 void ecall_classify(list *sections, list *labels, image *im)
 {
     classify_tiny(sections, labels, im, 5);
+}
+
+/**
+ * Test trained mnist model
+ */
+void test_mnist(list *sections, data *test_data, int pmem)
+{
+
+    if (pmem)
+    {
+        //test on pmem model
+        return;
+    }
+
+    char *weightfile = MNIST_WEIGHTS;
+    network *net = load_network(sections, MNIST_WEIGHTS, 0);
+    if (net == NULL)
+    {
+        printf("No neural network in enclave..\n");
+        return;
+    }
+    srand(12345);
+
+    float avg_acc = 0;
+    data test = *test_data;
+    image im;
+
+    for (int i = 0; i < test.X.rows; ++i)
+    {
+         im = float_to_image(28, 28, 1, test.X.vals[i]);
+
+        float pred[10] = {0};
+
+        float *p = network_predict(net, im.data);
+        axpy_cpu(10, 1, p, 1, pred, 1);
+        flip_image(im);
+        p = network_predict(net, im.data);
+        axpy_cpu(10, 1, p, 1, pred, 1);
+
+        int index = max_index(pred, 10);
+        int class = max_index(test.y.vals[i], 10);
+        if (index == class)
+            avg_acc += 1;
+        
+       printf("%4d: %.2f%%\n", i, 100. * avg_acc / (i + 1)); //un/comment to see/hide accuracy progress
+    }
+    printf("Overall prediction accuracy: %2f%%\n", 100. * avg_acc / test.X.rows);
+    free_network(net);
 }
 
 void test_cifar(list *sections, data *test_data, int pmem)
@@ -105,7 +183,7 @@ void test_cifar(list *sections, data *test_data, int pmem)
         return;
     }
 
-    //char* weightfile = CIFAR_WEIGHTS;
+    char *weightfile = CIFAR_WEIGHTS;
     network *net = load_network(sections, CIFAR_WEIGHTS, 0);
     srand(12345);
 
@@ -117,9 +195,8 @@ void test_cifar(list *sections, data *test_data, int pmem)
     avg_acc += acc[0];
     avg_top5 += acc[1];
     printf("top1: %f, xx seconds, %d images\n", avg_acc, test.X.rows);
-    //free_data(test);
+    free_network(net);
 }
-
 /**
  * Classify an image with Tiny Darknet 
  * Num of classes in model: 1000
@@ -130,7 +207,7 @@ void classify_tiny(list *sections, list *labels, image *img, int top)
     network *net = load_network(sections, TINY_WEIGHTS, 0);
     printf("Done loading trained network model in enclave..\n");
     set_batch_network(net, 1);
-    srand(2222222);
+    srand(54321);
 
     //get label names; e.g dog, person, giraffe etc
     char **names = (char **)list_to_array(labels);
@@ -157,13 +234,27 @@ void classify_tiny(list *sections, list *labels, image *img, int top)
     if (r.data != im.data)
         free_image(r);
 }
+//For testing my enclave file I/O ocall wrapper fxns..
+void test_fio()
+{
+    ocall_open_file("file.txt", O_WRONLY);
+    char c[] = "enclave file i/o test";
+    fwrite(c, strlen(c) + 1, 1, 0);
+    ocall_close_file();
+    //dont have fseek ocall so I close and reopen for now :-)
+    char buffer[100];
 
+    ocall_open_file("file.txt", O_RDONLY);
+
+    fread(buffer, strlen(c) + 1, 1, 0);
+    printf("String: %s\n", buffer);
+    ocall_close_file();
+}
 /**
  * Author: Peterson Yuhala
  * Knowledge distillation involves training a smaller network with 
  * a larger network. 
- * I do not need this in the enclave for my proof of concept ml application
- * Nevertheless this functionality could be easily ported into the enclave
+ * 
  */
 
 /* void train_cifar_distill(char *cfgfile, char *weightfile)

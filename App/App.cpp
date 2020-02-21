@@ -24,9 +24,14 @@ data training_data, test_data;
  */
 #define CIFAR_CFG_FILE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/cifar.cfg"
 #define CIFAR_TEST_DATA "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/cifar/cifar-10-batches-bin/test_batch.bin"
-#define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/eagle.jpg"
+#define TINY_IMAGE "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/person.jpg"
 #define TINY_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/tiny.cfg"
 #define DATA_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/tiny.data"
+#define MNIST_TRAIN_IMAGES "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/train-images-idx3-ubyte"
+#define MNIST_TRAIN_LABELS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/train-labels-idx1-ubyte"
+#define MNIST_TEST_IMAGES "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/t10k-images-idx3-ubyte"
+#define MNIST_TEST_LABELS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/t10k-labels-idx1-ubyte"
+#define MNIST_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/mnist.cfg"
 
 /* Thread function --> only for testing purposes */
 void thread_func()
@@ -115,12 +120,15 @@ void test_tiny(char *cfgfile)
 
 void train_mnist(char *cfgfile)
 {
-    //TODO
+
+    std::string img_path = MNIST_TRAIN_IMAGES;
+    std::string label_path = MNIST_TRAIN_LABELS;
+    data train = load_mnist_images(img_path);
+    train.y = load_mnist_labels(label_path);
     list *sections = read_cfg(cfgfile);
-    training_data = load_all_cifar10();
-    ecall_trainer(global_eid, sections, &training_data, 0);
-    printf("Training complete..\n");
-    free_data(training_data);
+    ecall_trainer(global_eid, sections, &train, 0);
+    printf("Mnist training complete..\n");
+    free_data(train);
 }
 
 /**
@@ -130,12 +138,15 @@ void train_mnist(char *cfgfile)
 void test_mnist(char *cfgfile)
 {
 
-    //TODO
+    std::string img_path = MNIST_TEST_IMAGES;
+    std::string label_path = MNIST_TEST_LABELS;
+    data test = load_mnist_images(img_path);
+    test.y = load_mnist_labels(label_path);
     list *sections = read_cfg(cfgfile);
-    test_data = load_cifar10_data(CIFAR_TEST_DATA);
-    ecall_tester(global_eid, sections, &test_data, 0);
-    printf("Testing complete..\n");
-    free_data(test_data);
+
+    ecall_tester(global_eid, sections, &test, 0);
+    printf("Mnist testing complete..\n");
+    free_data(test);
 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -180,7 +191,10 @@ int SGX_CDECL main(int argc, char *argv[])
 
     //train_cifar(CIFAR_CFG_FILE);
     //test_cifar(CIFAR_CFG_FILE);
-    test_tiny(TINY_CFG);
+    //test_tiny(TINY_CFG);
+    //train_mnist(MNIST_CFG);
+    test_mnist(MNIST_CFG);
+
     /*  
     for (int i = 0; i < NUM_THREADS; i++)
     {
