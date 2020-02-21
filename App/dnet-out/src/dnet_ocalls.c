@@ -83,7 +83,7 @@ void ocall_fread(void *ptr, size_t size, size_t nmemb)
     }
     else
     {
-        printf("Corrupt file pointer..\n");
+        printf("Corrupt file pointer or file closed..\n");
         abort();
     }
 }
@@ -96,7 +96,7 @@ void ocall_fwrite(void *ptr, size_t size, size_t nmemb)
     }
     else
     {
-        printf("Corrupt file pointer..\n");
+        printf("Corrupt file pointer or file closed..\n");
         abort();
     }
 }

@@ -1195,11 +1195,14 @@ void save_weights_upto(network *net, char *filename, int cutoff)
             fwrite(l.weights, sizeof(float), size, fp);
         }
     }
-    //ocall_close_file();//close this file in trainer..
+  
 }
 void save_weights(network *net, char *filename)
 {
+    //create and open backup file
+    ocall_open_file(filename, O_WRONLY); 
     save_weights_upto(net, filename, net->n);
+    ocall_close_file();
 }
 
 void load_connected_weights(layer l, int fp, int transpose)

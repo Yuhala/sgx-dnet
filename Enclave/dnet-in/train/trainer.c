@@ -49,9 +49,7 @@ void train_mnist(list *sections, data *training_data, int pmem)
     float progress = 0;
     data train = *training_data;
     printf("Max batches: %d\n", net->max_batches);
-    char *path = BACKUP;
-    //create and open backup file
-    ocall_open_file(path, O_WRONLY);    
+    char *path = BACKUP;      
     
 
 
@@ -78,8 +76,7 @@ void train_mnist(list *sections, data *training_data, int pmem)
         }
     }
 
-    //close backup file
-    ocall_close_file();
+   
     printf("Done training mnist network..\n");
     //free_network(net);
     //TODO
