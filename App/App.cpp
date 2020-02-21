@@ -144,7 +144,7 @@ void test_mnist(char *cfgfile)
     test.y = load_mnist_labels(label_path);
     list *sections = read_cfg(cfgfile);
 
-    ecall_tester(global_eid, sections, &test_data, 0);
+    ecall_tester(global_eid, sections, &test, 0);
     printf("Mnist testing complete..\n");
     free_data(test);
 }

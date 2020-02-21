@@ -169,7 +169,7 @@ void test_mnist(list *sections, data *test_data, int pmem)
         free_image(im);
         printf("%4d: %.2f%%\n", i, 100. * avg_acc / (i + 1));
     }
-    printf("Overall prediction accuracy: %2f%%", 100. * avg_acc / test.X.rows);
+    printf("Overall prediction accuracy: %2f%%\n", 100. * avg_acc / test.X.rows);
     free_network(net);
 }
 
