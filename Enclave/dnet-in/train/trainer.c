@@ -33,8 +33,7 @@ void ecall_trainer(list *sections, data *training_data, int pmem)
 void train_mnist(list *sections, data *training_data, int pmem)
 {
     //TODO: pointer checks
-    printf("Training mnist in enclave..\n"); //minimize the number of prints when doing benchmarking as they perform expensive enclave transitions..
-
+    printf("Training mnist in enclave..\n"); 
     network *net = create_net_in(sections);
     printf("Done creating network in enclave...\n");
 
@@ -132,6 +131,9 @@ void ecall_classify(list *sections, list *labels, image *im)
 void test_mnist(list *sections, data *test_data, int pmem)
 {
 
+
+
+
     if (pmem)
     {
         //test on pmem model
@@ -146,7 +148,20 @@ void test_mnist(list *sections, data *test_data, int pmem)
         return;
     }
     srand(12345);
+    //----------------------------------------------------------------------------
+    float avg_acc = 0;
+    float avg_top5 = 0;
+    data test = *test_data;
 
+    float *acc = network_accuracies(net, test, 2);
+    avg_acc += acc[0];
+    avg_top5 += acc[1];
+    printf("top1: %f, xx seconds, %d images\n", avg_acc, test.X.rows);
+    free_network(net);
+
+
+    //----------------------------------------------------------------------------
+    return;
     float avg_acc = 0;
     data test = *test_data;
     image im;
