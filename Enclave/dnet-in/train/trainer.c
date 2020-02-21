@@ -167,8 +167,8 @@ void test_mnist(list *sections, data *test_data, int pmem)
         int class = max_index(test.y.vals[i], 10);
         if (index == class)
             avg_acc += 1;
-        //free_image(im); //will segfault if test data outside
-        printf("%4d: %.2f%%\n", i, 100. * avg_acc / (i + 1));
+        
+       printf("%4d: %.2f%%\n", i, 100. * avg_acc / (i + 1)); //un/comment to see/hide accuracy progress
     }
     printf("Overall prediction accuracy: %2f%%\n", 100. * avg_acc / test.X.rows);
     free_network(net);
