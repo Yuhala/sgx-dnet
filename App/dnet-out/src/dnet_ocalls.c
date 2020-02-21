@@ -8,6 +8,7 @@
 
 //File pointer used for reading/writing files from within the enclave runtime
 FILE *fp = NULL;
+//#define VERBOSE
 
 
 void ocall_print_string(const char *str)
@@ -39,17 +40,27 @@ void ocall_open_file(const char *filename, flag oflag)
         {
         case O_RDONLY:
             fp = fopen(filename, "rb");
+            #ifdef VERBOSE
             printf("Opened file in read only mode\n");
+            #endif
             break;
         case O_WRONLY:
             fp = fopen(filename, "wb");
+            #ifdef VERBOSE
             printf("Opened file in write only mode\n");
+            #endif
             break;
         case O_RDPLUS:
             fp = fopen(filename, "r+");
+           #ifdef VERBOSE
+            printf("Opened file in r/w mode\n");
+            #endif
             break;
         case O_WRPLUS:
             fp = fopen(filename, "w+");
+            #ifdef VERBOSE
+            printf("Opened file in r/w mode\n");
+            #endif
             break;
         default:
             ;//nothing to do
@@ -72,6 +83,9 @@ void ocall_close_file()
     {
         fclose(fp);
         fp = NULL;
+        #ifdef VERBOSE
+            printf("Closed file\n");
+            #endif
     }
 }
 

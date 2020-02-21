@@ -19,6 +19,11 @@
 - To test the mnist training and testing, download the 4 mnist training and test data and labels here:[mnist data](http://yann.lecun.com/exdb/mnist/), decompress the files and add them to the `App/dnet-out/data/mnist` folder before launching the training and test routines.
 - See the example trainer with the mnist model for more inspiration on how to train and test other models.
 
+## Saving/Checkpointing networks during training
+- Network weights can be saved to disk during training via the `save_weights(net,path)` API. 
+- This routine leverages the file i/o wrappers described above.
+ 
+
 ## Testing the model
 - To test the model after training, add a routine in `App.cpp` which takes the test data as input.
 - Add a test routine in the enclave/trusted section which performs inference on a trained `network` object. This object could reside in enclave memory or be created from a weights file.
