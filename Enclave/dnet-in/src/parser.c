@@ -1195,7 +1195,7 @@ void save_weights_upto(network *net, char *filename, int cutoff)
             fwrite(l.weights, sizeof(float), size, fp);
         }
     }
-    ocall_close_file();
+    //ocall_close_file();//close this file in trainer..
 }
 void save_weights(network *net, char *filename)
 {

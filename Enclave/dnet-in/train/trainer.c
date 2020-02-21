@@ -72,6 +72,7 @@ void train_mnist(list *sections, data *training_data, int pmem)
         {
 
             //TODO: save weights
+            printf("Saving weights to weight file..\n");
             save_weights(net,path);
             
         }
