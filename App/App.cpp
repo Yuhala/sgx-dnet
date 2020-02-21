@@ -29,8 +29,8 @@ data training_data, test_data;
 #define DATA_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/tiny.data"
 #define MNIST_TRAIN_IMAGES "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/train-images-idx3-ubyte"
 #define MNIST_TRAIN_LABELS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/train-labels-idx1-ubyte"
-#define MNIST_TEST_IMAGES "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/train-images-idx3-ubyte"
-#define MNIST_TEST_LABELS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/train-labels-idx1-ubyte"
+#define MNIST_TEST_IMAGES "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/t10k-images-idx3-ubyte"
+#define MNIST_TEST_LABELS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/data/mnist/t10k-labels-idx1-ubyte"
 #define MNIST_CFG "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/cfg/mnist.cfg"
 
 /* Thread function --> only for testing purposes */
@@ -192,7 +192,7 @@ int SGX_CDECL main(int argc, char *argv[])
     //train_cifar(CIFAR_CFG_FILE);
     //test_cifar(CIFAR_CFG_FILE);
     //test_tiny(TINY_CFG);
-    train_mnist(MNIST_CFG);
+    //train_mnist(MNIST_CFG);
     test_mnist(MNIST_CFG);
 
     /*  
