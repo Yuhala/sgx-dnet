@@ -135,6 +135,7 @@ void test_mnist(list *sections, data *test_data, int pmem)
         //test on pmem model
         return;
     }
+    printf("Testing mnist model..\n");
 
     char *weightfile = MNIST_WEIGHTS;
     network *net = load_network(sections, MNIST_WEIGHTS, 0);
@@ -144,7 +145,17 @@ void test_mnist(list *sections, data *test_data, int pmem)
         return;
     }
     srand(12345);
+    float avg_acc = 0;
+    data test = *test_data;
+    float *acc = network_accuracies(net, test, 2);
+    avg_acc += acc[0];
 
+    printf("Avg. accuracy: %f%%, %d images\n", avg_acc * 100, test.X.rows);
+    free_network(net);
+
+    /**
+     * Test multi mnist
+     *
     float avg_acc = 0;
     data test = *test_data;
     image im;
@@ -170,6 +181,7 @@ void test_mnist(list *sections, data *test_data, int pmem)
     }
     printf("Overall prediction accuracy: %2f%%\n", 100. * avg_acc / test.X.rows);
     free_network(net);
+    */
 }
 
 void test_cifar(list *sections, data *test_data, int pmem)
