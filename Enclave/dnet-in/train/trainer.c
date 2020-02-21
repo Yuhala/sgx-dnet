@@ -6,6 +6,7 @@
 #define CIFAR_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/cifar.weights"
 #define TINY_WEIGHTS "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/tiny.weights"
 #define EPOCHS 100
+#define BACKUP "/home/ubuntu/peterson/sgx-dnet/App/dnet-out/backup/mnist.weights"
 
 //global network model
 network *net = NULL;
@@ -44,31 +45,40 @@ void train_mnist(list *sections, data *training_data, int pmem)
     int classes = 10;
     int N = 60000; //number of training images
     int epoch = (*net->seen) / N;
+    int cur_batch = 0;
     float progress = 0;
     data train = *training_data;
     printf("Max batches: %d\n", net->max_batches);
+    char *path = BACKUP;
+    //create and open backup file
+    ocall_open_file(path, O_WRONLY);    
+    
 
-    while (get_current_batch(net) < net->max_batches || net->max_batches == 0)
+
+    while (cur_batch< net->max_batches || net->max_batches == 0)
     {
-
+        cur_batch = get_current_batch(net);
         float loss = train_network_sgd(net, train, 1);
         if (avg_loss == -1)
             avg_loss = loss;
         avg_loss = avg_loss * .95 + loss * .05;
-        progress = ((double)get_current_batch(net) / net->max_batches) * 100;
-        printf("Batch num: %ld, Seen: %.3f: Loss: %f, Avg loss: %f avg, L. rate: %f rate,Progress: %f%% \n",
-               get_current_batch(net), (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), progress);
-        if (*net->seen / N > epoch)
-        {
-            //TODO: save weights
-        }
-        if (get_current_batch(net) % 100 == 0)
+
+        progress = ((double)cur_batch / net->max_batches) * 100;
+        printf("Batch num: %ld, Seen: %.3f: Loss: %f, Avg loss: %f avg, L. rate: %f rate,Progress: %.2f%% \n",
+               cur_batch, (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), progress);
+
+        
+        if (cur_batch % 5 == 0)
         {
 
             //TODO: save weights
+            save_weights(net,path);
+            
         }
     }
 
+    //close backup file
+    ocall_close_file();
     printf("Done training mnist network..\n");
     //free_network(net);
     //TODO
@@ -100,8 +110,11 @@ void train_cifar(list *sections, data *training_data, int pmem)
             avg_loss = loss;
         avg_loss = avg_loss * .95 + loss * .05;
 
+
         printf("Batch num: %ld, Seen: %.3f: Loss: %f, Avg loss: %f avg, L. rate: %f rate,Images seen: %ld \n",
                get_current_batch(net), (float)(*net->seen) / N, loss, avg_loss, get_current_rate(net), *net->seen);
+        
+        
     }
 
     free_network(net);
