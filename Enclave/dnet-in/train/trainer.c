@@ -151,12 +151,12 @@ void test_mnist(list *sections, data *test_data, int pmem)
     //----------------------------------------------------------------------------
     float avg_acc = 0;
     float avg_top5 = 0;
-    data test = *test_data;
+    data test1 = *test_data;
 
-    float *acc = network_accuracies(net, test, 2);
+    float *acc = network_accuracies(net, test1, 2);
     avg_acc += acc[0];
     avg_top5 += acc[1];
-    printf("top1: %f, xx seconds, %d images\n", avg_acc, test.X.rows);
+    printf("top1: %f, xx seconds, %d images\n", avg_acc, test1.X.rows);
     free_network(net);
 
 
