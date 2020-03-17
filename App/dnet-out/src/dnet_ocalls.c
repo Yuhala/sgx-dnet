@@ -6,11 +6,13 @@
 
 #include "dnet_ocalls.h"
 
-//File pointer used for reading/writing files from within the enclave runtime
-FILE *fp = NULL;
-//#define VERBOSE
+//#define DISABLE_CACHE //open files with O_DIRECT thus bypassing kernel page cache for reads and writes
 
-
+//File pointers used for reading and writing files from within the enclave runtime
+FILE *write_fp = NULL;
+FILE *read_fp = NULL;
+//file descriptor used by open
+int fd;
 void ocall_print_string(const char *str)
 {
     /* Proxy/Bridge will check the length and null-terminate
@@ -34,36 +36,46 @@ void ocall_free_list(list *list)
 // 0 for read: 1 for write
 void ocall_open_file(const char *filename, flag oflag)
 {
-    if (!fp) //fp == NULL
+
+    if (!write_fp && !read_fp) //fp == NULL
     {
         switch (oflag)
         {
         case O_RDONLY:
-            fp = fopen(filename, "rb");
-            #ifdef VERBOSE
+#ifdef DISABLE_CACHE
+            fd = open(filename, O_RDONLY | O_CREAT | O_DIRECT);
+            read_fp = fdopen(fd, "rb");
+
+#else
+            read_fp = fopen(filename, "rb");
+#endif
+
             printf("Opened file in read only mode\n");
-            #endif
             break;
         case O_WRONLY:
-            fp = fopen(filename, "wb");
-            #ifdef VERBOSE
+#ifdef DISABLE_CACHE
+            fd = open(filename, O_WRONLY | O_CREAT | O_DIRECT);
+            write_fp = fdopen(fd, "wb");
+
+#else
+            write_fp = fopen(filename, "wb");
+#endif
+
             printf("Opened file in write only mode\n");
-            #endif
             break;
         case O_RDPLUS:
-            fp = fopen(filename, "r+");
-           #ifdef VERBOSE
-            printf("Opened file in r/w mode\n");
-            #endif
+#ifdef DISABLE_CACHE
+//TODO
+#endif
+            read_fp = fopen(filename, "r+");
             break;
         case O_WRPLUS:
-            fp = fopen(filename, "w+");
-            #ifdef VERBOSE
-            printf("Opened file in r/w mode\n");
-            #endif
+#ifdef DISABLE_CACHE
+//TODO
+#endif
+            write_fp = fopen(filename, "w+");
             break;
-        default:
-            ;//nothing to do
+        default:; //nothing to do
         }
     }
     else
@@ -73,44 +85,56 @@ void ocall_open_file(const char *filename, flag oflag)
 }
 
 /**
- * Only one file can be manipulated at any point in time
- * from within enclave. So we have no ambiguity at the level
- * of which file pointer to close..
+ * Close all file descriptors
  */
 void ocall_close_file()
 {
-    if (fp) //fp != NULL
+#ifdef DISABLE_CACHE
+
+#endif
+    if (read_fp) //fp != NULL
     {
-        fclose(fp);
-        fp = NULL;
-        #ifdef VERBOSE
-            printf("Closed file\n");
-            #endif
+        fclose(read_fp);
+        read_fp = NULL;
+    }
+    if (write_fp)
+    {
+        fclose(write_fp);
+        write_fp = NULL;
     }
 }
 
 void ocall_fread(void *ptr, size_t size, size_t nmemb)
 {
-    if (fp)
+    if (read_fp)
     {
-        fread(ptr, size, nmemb, fp);
+        fread(ptr, size, nmemb, read_fp);
     }
     else
     {
-        printf("Corrupt file pointer or file closed..\n");
+        printf("Corrupt file pointer..\n");
         abort();
     }
 }
 
 void ocall_fwrite(void *ptr, size_t size, size_t nmemb)
 {
-    if (fp)
+    int ret;
+    if (write_fp)
     {
-        fwrite(ptr, size, nmemb, fp);
+        fwrite(ptr, size, nmemb, write_fp);
+        //make sure it is flushed to disk first
+        ret = fflush(write_fp);
+        if (ret != 0)
+            printf("fflush did not work..\n");
+        /*  ret = fsync(fileno(fp));
+        if (ret < 0)
+            printf("fsync did not work..\n"); */
+        return;
     }
     else
     {
-        printf("Corrupt file pointer or file closed..\n");
+        printf("Corrupt file pointer..\n");
         abort();
     }
 }

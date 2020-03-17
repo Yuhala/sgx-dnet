@@ -51,6 +51,8 @@
         "streambuf": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "darknet.h": "c",
+        "dnet_ocalls.h": "c"
     }
 }
